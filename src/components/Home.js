@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import '../styles/not-found.scss';
 
-  class Welcome extends Component {
+  class Home extends Component {
 
       constructor(props){
           super(props);
@@ -17,7 +17,7 @@ import '../styles/not-found.scss';
       }
   }
 
-  export default Welcome;
+  export default Home;
 
   // import React, { Component } from 'react';
   // import Dropzone from 'react-dropzone';

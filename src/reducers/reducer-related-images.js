@@ -25,7 +25,7 @@ export default function(state = INITIAL_STATE, action) {
       });
 
     case TYPES.SEND_ANNOTATIONS:
-console.log(action.payload.request.data.json);
+      console.log(action.payload.request.data.json);
       return Object.assign({}, state, {
         getRankin: {
           img_list: action.payload.request.data.json,

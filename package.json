@@ -23,13 +23,17 @@
     "style-loader": "^0.13.0"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "babel-core": "^6.26.0",
     "express": "^4.14.0",
     "history": "^3.0.0",
     "react": "^15.6.2",
     "react-dom": "^15.6.2",
+    "react-grid-gallery": "^0.4.8",
+    "react-js-pagination": "^3.0.1",
     "react-redux": "^5.0.7",
     "react-router": "^2.8.1",
+    "react-rpg": "^2.0.0",
     "redux": "^3.7.2",
     "redux-promise": "^0.5.3",
     "redux-thunk": "^2.2.0"

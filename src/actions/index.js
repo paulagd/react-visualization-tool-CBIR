@@ -81,6 +81,17 @@ export function resetRanking() {
 }
 
 //RESET_annotations
+export function resetQimList() {
+    return function(dispatch) {
+          dispatch({
+              type: TYPES.RESET_QIMLIST
+          });
+        // }.catch((response) => {
+        //     dispatch(errorMessage(`${response} in action getRankinOfImage`));
+        // });
+    };
+}
+//RESET_annotations
 export function resetAnnotations() {
     return function(dispatch) {
           dispatch({
@@ -92,58 +103,20 @@ export function resetAnnotations() {
     };
 }
 
-// //GET IMAGE FROM AN ID
-// export function getSingleImage(id) {
-//     return function(dispatch) {
-//         axios.get(`${ROOT_URL}/getImageById/${id}.json`)
-//         .then(request => {
-//             dispatch({
-//                 type: TYPES.GET_SINGLE_IMG,
-//                 payload: request
-//             });
-//         }).catch((response) => {
-//             dispatch(errorMessage(`${response} in action getSingleImage`));
-//         });
-//     };
-// }
+export function getQimList(dataset) {
 
-export function getQimListOxford() {
-    return function(dispatch) {
-        axios.get(`${ROOT_URL}/getQimListOxford/`)
-        .then(request => {
-            dispatch({
-                type: TYPES.GET_QIMLIST_OXFORD,
-                payload: request
-            });
-        }).catch((response) => {
-            dispatch(errorMessage(`${response} in action getQimListOxford`));
-        });
-    };
-}
-export function getQimListParis() {
-    return function(dispatch) {
-        axios.get(`${ROOT_URL}/getQimListParis/`)
-        .then(request => {
-            dispatch({
-                type: TYPES.GET_QIMLIST_PARIS,
-                payload: request
-            });
-        }).catch((response) => {
-            dispatch(errorMessage(`${response} in action getQimListParis`));
-        });
-    };
-}
+    // Dataset first letter toUpperCase
+    const dataset_modified  = dataset.charAt(0).toUpperCase() + dataset.slice(1);
 
-export function getQimListInstre() {
     return function(dispatch) {
-        axios.get(`${ROOT_URL}/getQimListInstre/`)
+        axios.get(`${ROOT_URL}/getQimList${dataset_modified}/`)
         .then(request => {
             dispatch({
-                type: TYPES.GET_QIMLIST_INSTRE,
+                type: TYPES.GET_QIMLIST,
                 payload: request
             });
         }).catch((response) => {
-            dispatch(errorMessage(`${response} in action getQimListInstre`));
+            dispatch(errorMessage(`${response} in action getQimListDataset`));
         });
     };
 }
