@@ -1,0 +1,52 @@
+
+body, html {
+  min-height: 100%;
+  overflow: auto;
+}
+
+#main-container {
+  min-height: 100%;
+  overflow: auto;
+  .navbar {
+    margin-bottom: 0px;
+  }
+
+  .main-app-page{
+    min-height: 100%;
+    overflow: auto;
+
+    .navbar-header{
+      display: inline-flex;
+      padding-top: 5px;
+
+      #title {
+        color:black;
+      }
+
+      .nav {
+        display:inline-flex;
+        vertical-align: middle;
+        padding-top: 5px;
+
+      }
+      .nav-link {
+        &.first-left{
+          border-left-color: #a29090;
+          border-style: double;
+          border-bottom: none;
+          border-right: none;
+          border-top: none;
+        }
+        padding-top: 15px !important;
+        font-style: normal;
+        color: #796666;
+      }
+    }
+
+    .content {
+      min-height: 100%;
+      overflow: auto;
+
+    }
+  }
+}

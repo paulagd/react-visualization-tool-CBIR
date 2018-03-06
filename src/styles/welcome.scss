@@ -1,0 +1,106 @@
+@import "node_modules/react-image-gallery/styles/scss/image-gallery.scss";
+
+.main-content {
+  margin-top: 2%;
+  margin-left: 2%;
+  // min-height: 100%;
+
+  section {
+    padding-left: 10px;
+    display: table-cell;
+    width: 50%;
+    overflow: auto;
+    h5 {
+      margin-top: 20px;
+    }
+  }
+
+  h2 {
+    padding-top: 30px;
+    text-align: center;
+  }
+
+  .upload-content {
+    vertical-align: middle;
+  }
+
+  .input-url{
+    width: 260px;
+    margin-bottom: 20px;
+  }
+
+  .dropzone {
+      width: 260px;
+      height: 20%;
+      border-width: 2px;
+      border-color: #332e2e;
+      border-style: dashed;
+      border-radius: 5px;
+      opacity: 0.5;
+      padding:10px;
+      cursor: copy;
+      margin-top: 10px;
+      margin-bottom: 40px;
+  }
+
+  .button {
+    margin-left: 20px;
+    margin-top: 5%;
+    margin-bottom: 3%;
+    font-family: sans-serif;
+    height: 30px;
+    width: 100px;
+    -webkit-border-radius: 28;
+    -moz-border-radius: 28;
+    border-radius: 28px;
+    color: #0a090a;
+    background: #e4e8eb;
+    border: solid #798287 2px;
+    text-decoration: none;
+
+  }
+
+  .submit {
+    width: 110px;
+    height: 60px;
+    margin-left: 280px;
+    margin-top: -90px;
+  }
+
+  .slider {
+    height: 50%;
+    margin-top: 40px;
+    margin-bottom: 5%;
+    margin-left: 20px;
+    margin-right: 60px;
+
+
+    .slick-arrow {
+      border-radius: 100%;
+      background-color: #333;
+    }
+
+    .slick-list {
+      margin-left: 10px;
+      margin-right: 10px;
+      margin-top: 10px;
+      max-height: 100%;
+    }
+
+    .slick-slide{
+        display: flex !important;
+        vertical-align: middle;
+        display: inline-block;
+        height: 100%;
+        margin-right: 18px;
+
+      img {
+        width: 100%;
+      }
+      img:hover {
+        cursor: pointer;
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.9), 0 6px 20px 0 rgba(0,0,0,0.9);
+      }
+    }
+  }
+}

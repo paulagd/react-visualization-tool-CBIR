@@ -1,0 +1,28 @@
+.content-main {
+  padding-left: 3%;
+  padding-right: 3%;
+  min-height: 100%;
+
+
+  h3 {
+    padding-top: 15px;
+    font-weight: 600 !important;
+    word-spacing: 6px !important;
+  }
+
+  .dataset-content {
+    min-height: 100%;
+
+    height: auto;
+    padding-bottom: 20px;
+
+    .imageGrid {
+      min-height: 100%;
+      overflow: auto;
+    }
+
+    .pagination {
+      padding-left: 8px;
+    }
+  }
+}
