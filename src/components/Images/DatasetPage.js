@@ -6,7 +6,7 @@ import { browserHistory } from 'react-router';
 import { ReactRpg } from 'react-rpg';
 import Gallery from 'react-grid-gallery';
 
-import { getQimList, resetRanking } from '../../actions/index';
+import { getQimList, resetRanking, getIdFromPath, getPathfromId} from '../../actions/index';
 
 import '../../styles/main-page.scss';
 
@@ -29,6 +29,8 @@ class DatasetPage extends Component {
 
   componentWillMount() { //componentDidMount
     this.props.getQimList(this.props.route.path);
+    // this.props.getIdFromPath('instre','INSTRE-S1/01a_canada_book/035.jpg');
+    this.props.getPathfromId('instre','33');
   }
 
   componentWillReceiveProps(newProps) {
@@ -131,4 +133,4 @@ function mapStateToProps(state) {
   return { qimList: state.reducerImages.qimList_dataset };
 }
 
-export default connect(mapStateToProps, { getQimList, resetRanking})(DatasetPage);
+export default connect(mapStateToProps, { getQimList, resetRanking, getIdFromPath, getPathfromId })(DatasetPage);
