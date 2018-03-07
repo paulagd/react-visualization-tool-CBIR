@@ -21,6 +21,11 @@ export default function(state = INITIAL_STATE, action) {
         imlist: action.payload.data
       });
 
+    case TYPES.GET_INFO_IMG:
+      return Object.assign({}, state, {
+        img_info: action.payload.encoded_image
+      });
+
     default:
       return state;
   }
