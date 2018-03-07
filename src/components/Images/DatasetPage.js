@@ -13,7 +13,7 @@ import { getIdFromPath, getPathfromId } from '../../../utils/index';
 import '../../styles/main-page.scss';
 
 const ItemsPerPage = 28;
-
+const ROOT_URL = 'http://localhost:5000';
 class DatasetPage extends Component {
 
   constructor(props) {
@@ -21,7 +21,7 @@ class DatasetPage extends Component {
 
     this.state = {
       images: [],
-      url_imgs: this.props.route.url_imgs,
+      url_imgs: `${ROOT_URL}/getImageById/`,
       title: this.props.route.path,
       activePage: 1,
       n_pages: 0,
@@ -33,21 +33,16 @@ class DatasetPage extends Component {
   componentWillMount() { //componentDidMount
     this.props.getQimList(this.props.route.path);
     this.props.getImlist('instre');
-
-    // this.props.getIdFromPath('instre','INSTRE-S1/01a_canada_book/035.jpg');
-    // this.props.getPathfromId('instre','33');
   }
 
   componentWillReceiveProps(newProps) {
       if((JSON.stringify(this.props.qimList) !== JSON.stringify(newProps.qimList)) ||
           (JSON.stringify(this.props.route.path) !== JSON.stringify(newProps.route.path)) ||
-          (JSON.stringify(this.props.imlist) !== JSON.stringify(newProps.imlist)) ||
-          (JSON.stringify(this.props.route.url_imgs) !== JSON.stringify(newProps.route.url_imgs))) {
+          (JSON.stringify(this.props.imlist) !== JSON.stringify(newProps.imlist))) {
           this.setState({
               qimList: newProps.qimList && newProps.qimList.length ? newProps.qimList : [],
               imlist: newProps.imlist && newProps.imlist.length ? newProps.imlist: [],
               n_pages:  newProps.qimList ? Math.ceil(newProps.qimList.length / ItemsPerPage) : null,
-              url_imgs: newProps.route.url_imgs,
               title: newProps.route.path,
           });
       }
@@ -78,47 +73,29 @@ class DatasetPage extends Component {
     let array = [];
 
     if(this.state.imlist && this.state.imlist.length){
-      console.log("¿¿¿¿¿¿¿ imlist no es undefined ??????");
-      const id = getIdFromPath('INSTRE-S1/01a_canada_book/002.jpg', this.state.imlist);
-      console.log('id',id);
-      const path = getPathfromId('3', this.state.imlist);
-      console.log('path',path);
 
+      this.state.qimList.map((obj, j)=> {
+      let id = obj.image;
+
+      if(obj.image.indexOf("/") != -1){
+        id = getIdFromPath(obj.image, this.state.imlist);
+      }
+
+      array.push({
+          url: this.state.url_imgs + id +`?dataset=${this.state.title}`,
+          clickHandler: (path) => {
+              this.props.resetRanking();
+              // when clicked, it has to show the related images
+              browserHistory.push({
+                pathname: `/images/${id.replace(/.jpg$/,"")}`,
+                query: { dataset: this.state.title}
+              });
+            },
+          });
+      });
     }
-
-    // this.state.qimList.map((obj, j)=> {
-    //
-    //  // if(obj.image.indexOf("/") != -1){
-    // if((this.state.imlist && this.state.imlist.length) &&
-    //     obj.image.indexOf("/") != -1 && this.state.imlist){
-    //     // this.props.getIdFromPath(this.state.title,obj.image);
-    //
-    //   }
-    //   // console.log("IMLIST", this.state.imlist);
-    //   array.push({
-    //       url: this.state.url_imgs + obj.image,
-    //       clickHandler: (path) => {
-    //           this.props.resetRanking();
-    //           // when clicked, it has to show the related images
-    //           browserHistory.push({
-    //             pathname: `/images/${obj.image.replace(/.jpg$/,"")}`,
-    //             query: { dataset: this.state.title }
-    //           });
-    //         },
-    //
-    //         // url: `${this.state.url_imgs}?path=${obj.image} `,
-    //         // clickHandler: (path) => {
-    //         //     // when clicked, it has to show the related images
-    //         //     this.props.resetRanking();
-    //         //     browserHistory.push({
-    //         //       pathname: `/images/instre_id`,
-    //         //       query: { dataset: 'instre', path: obj.image }
-    //         //     });
-    //         //   },
-    //     });
-    // });
-    // array = this.splitArray(array, ItemsPerPage);
-    // return array;
+    array = this.splitArray(array, ItemsPerPage);
+    return array;
   }
 
   handlePageChange(pageNumber) {
@@ -126,10 +103,7 @@ class DatasetPage extends Component {
   }
 
   renderContent() {
-     // this.displayImages();
     const array = this.displayImages();
-
-    console.log("--------array-------",array);
 
     return (
       <div className = "dataset-content" >

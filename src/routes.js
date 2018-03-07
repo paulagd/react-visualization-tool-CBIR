@@ -10,7 +10,7 @@ import Home from './components/Home';
 import DatasetPage from './components/Images/DatasetPage';
 // import ImageWithRelateds from './components/Images/ImageWithRelateds';
 
-import { options_NavBar, oxford, paris, instre } from './customize.js';
+import { options_NavBar } from './customize.js';
 import { getQimList, resetQimList} from './actions/index';
 
 const Test = ()=>{
@@ -22,18 +22,15 @@ export default (
         <IndexRoute components={Test}/>
         <Route path="/home" component={Home} />
         <Route path="images" >
-          <Route path="oxford" component={DatasetPage} url_imgs={oxford.url_imgs}
-            onEnter={()=>{
+          <Route path="oxford" component={DatasetPage} onEnter={()=>{
                 Store.dispatch(resetQimList());
                 Store.dispatch(getQimList('oxford'));
              }} />
-          <Route path="paris" component={DatasetPage} url_imgs={paris.url_imgs}
-            onEnter={()=>{
+          <Route path="paris" component={DatasetPage} onEnter={()=>{
                 Store.dispatch(resetQimList());
                 Store.dispatch(getQimList('paris'));
              }} />
-          <Route path="instre" component={DatasetPage} url_imgs={instre.url_imgs}
-            onEnter={()=>{
+          <Route path="instre" component={DatasetPage} onEnter={()=>{
                 Store.dispatch(resetQimList());
                 Store.dispatch(getQimList('instre'));
              }} />

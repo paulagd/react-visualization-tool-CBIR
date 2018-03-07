@@ -4,8 +4,12 @@ import * as TYPES from './types';
 const ROOT_URL = 'http://localhost:5000';
 
 //GET SORTED RANKING OF ID IMAGE
-export function getRankinOfImage(id, url, encoded_image, dataset, path) {
+export function getRankinOfImage(id, url, encoded_image, dataset) {
     const query = id ? `${ROOT_URL}/getRankinById/${id}.json` : `${ROOT_URL}/getRankinById/unknown_id`;
+
+    // let path = null; //TODO: si quiere el path hacer la conversion getPathfromId
+
+    // const query = `${ROOT_URL}/getRankinById/${id}.json`;
     return function(dispatch) {
         axios.post(query, { dataset, url, encoded_image, path})
         .then(request => {
@@ -47,35 +51,6 @@ export function getImlist(dataset) {
         });
     };
 }
-// export function getIdFromPath(dataset,path) {
-//     let data = {dataset, path};
-//     return function(dispatch) {
-//         axios.post(`${ROOT_URL}/getIdFromPath`, data)
-//         .then(request => {
-//             dispatch({
-//                 type: TYPES.GET_ID_FROM_PATH,
-//                 payload: request
-//             });
-//         }).catch((response) => {
-//             dispatch(errorMessage(`${response} in action getQimListDataset`));
-//         });
-//     };
-// }
-//
-// export function getPathfromId(dataset,id) {
-//
-//     return function(dispatch) {
-//         axios.post(`${ROOT_URL}/getPathfromId/${id}`, {dataset})
-//         .then(request => {
-//             dispatch({
-//                 type: TYPES.GET_PATH_FROM_ID,
-//                 payload: request
-//             });
-//         }).catch((response) => {
-//             dispatch(errorMessage(`${response} in action getQimListDataset`));
-//         });
-//     };
-// }
 
 //MODE QE
 export function sendFeedback_receiveRanking(id, url, encoded_image, dataset, path, similar_list, mode) {

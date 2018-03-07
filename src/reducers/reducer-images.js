@@ -14,17 +14,11 @@ export default function(state = INITIAL_STATE, action) {
     case TYPES.RESET_QIMLIST:
       return Object.assign({}, state, {
         qimList_dataset: null,
-        // imlist: null
       });
-
-    // case TYPES.GET_ID_FROM_PATH:
-    //   return Object.assign({}, state, {
-    //     id_mapped: null
-    //   });
 
     case TYPES.GET_IMLIST:
       return Object.assign({}, state, {
-        imlist: action.payload.data.slice(1,4)
+        imlist: action.payload.data
       });
 
     default:
