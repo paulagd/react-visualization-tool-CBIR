@@ -6,10 +6,14 @@ import { connect } from 'react-redux';
 import { Link, browserHistory } from 'react-router';
 import Slider from 'react-slick';
 
-import { postEncodedInfo, getQimList, resetRanking } from '../actions/index';
+import { getIdFromPath } from '../../utils/index';
+
+import { postEncodedInfo, getQimList, resetRanking, resetQimList, getImlist } from '../actions/index';
 
 import '../styles/home.scss';
 import '../styles/loading-bar.scss';
+
+const ROOT_URL = 'http://localhost:5000';
 
 //IDEA: TO CROP --> https://braavos.me/react-image-cropper/
 
@@ -24,29 +28,26 @@ class Home extends Component {
       drag:false,
       url:null,
       encoded_image:null,
-      url_imgs: {
-        oxford: 'http://localhost:5000/getImageOxfordById/',
-        paris: 'http://localhost:5000/getImageParisById/',
-        instre: 'http://localhost:5000/getImageInstreById'
-      },
+      url_imgs: `${ROOT_URL}/getImageById/`,
       datasetChosed:{condition: false, name:""},
-      qimList_oxford: props.qimList_oxford,
-      qimList_paris: props.qimList_paris,
-      qimList_instre: props.qimList_instre,
+      qimList: this.props.qimList ? this.props.qimList : [],
+      imlist: this.props.imlist ? this.props.imlist: []
     }
   }
 
-  // componentWillReceiveProps(newProps) {
-  //     if((JSON.stringify(this.props.qimList_oxford) !== JSON.stringify(newProps.qimList_oxford)) ||
-  //       (JSON.stringify(this.props.qimList_paris) !== JSON.stringify(newProps.qimList_paris))  ||
-  //       (JSON.stringify(this.props.qimList_instre) !== JSON.stringify(newProps.qimList_instre))) {
-  //         this.setState({
-  //             qimList_oxford: newProps.qimList_oxford && newProps.qimList_oxford.length ? newProps.qimList_oxford : [],
-  //             qimList_paris: newProps.qimList_paris && newProps.qimList_paris.length ? newProps.qimList_paris : [],
-  //             qimList_instre: newProps.qimList_instre && newProps.qimList_instre.length ? newProps.qimList_instre.slice(0,56) : [],
-  //         });
-  //     }
-  // }
+  componentWillMount() {
+    this.props.getImlist('instre');
+  }
+
+  componentWillReceiveProps(newProps) {
+      if((JSON.stringify(this.props.qimList) !== JSON.stringify(newProps.qimList)) ||
+          (JSON.stringify(this.props.imlist) !== JSON.stringify(newProps.imlist))) {
+          this.setState({
+            qimList: newProps.qimList && newProps.qimList.length ? newProps.qimList.slice(0,56) : [],
+            imlist: newProps.imlist && newProps.imlist.length ? newProps.imlist: [],
+          });
+      }
+  }
 
   onDrop(files) {
     this.setState({startLoading: true});
@@ -84,6 +85,7 @@ class Home extends Component {
     });
   }
 
+// TODO: unificar
   onClickSlide(obj){
     this.props.resetRanking();
     let url = `/images/${obj.image.replace(/.jpg$/,"")}`;
@@ -102,6 +104,8 @@ class Home extends Component {
     this.setState({show:!this.state.show})
   }
 
+
+  // TODO: unificar
   handleSubmit(event) {
     //submnit url photos
 
@@ -127,6 +131,7 @@ class Home extends Component {
     }
   }
 
+  // TODO: unificar
   onClickDropzone(event) {
     //submnit upload photos
     if(this.state.completeLoading){
@@ -135,7 +140,7 @@ class Home extends Component {
       if(this.state.datasetChosed.condition) {
         this.props.resetRanking();
         this.props.postEncodedInfo(this.state.encoded_image);
-        if (this.state.files.length) {
+        if (this.state.files && this.state.files.length) {
           // alert('A file was submitted: ' + this.state.files[0].name);
           alert('FINE!!');
           browserHistory.push({
@@ -167,49 +172,29 @@ class Home extends Component {
       autoplay:true,
     };
 
-    if (this.state.datasetChosed.name == "oxford") {
-      return(
-        <div>
-          <h2> OXFORD DATASET </h2>
-          <Slider {...settings}>
-            { this.state.qimList_oxford  ? this.state.qimList_oxford.map((obj)=>{
-              if (!(obj.image.length == 0)){
-                return(<div key={obj.image} ><img className="img-slide" onClick= {this.onClickSlide.bind(this,obj)}
-                        src={this.state.url_imgs.oxford+obj.image} /></div>);
-              }
-            }) : null }
-          </Slider>
-        </div>
-      );
-    } else if (this.state.datasetChosed.name == 'paris') {
-      return(
-        <div>
-          <h2> PARIS DATASET </h2>
-          <Slider {...settings}>
-            { this.state.qimList_paris  ? this.state.qimList_paris.map((obj)=>{
-              if (!(obj.image.length == 0)){
-                return(<div key={obj.image} ><img className="img-slide" onClick= {this.onClickSlide.bind(this,obj)}
-                        src={this.state.url_imgs.paris+obj.image} /></div>);
-              }
-            }) : null }
-          </Slider>
-        </div>
-      );
-    } else if (this.state.datasetChosed.name == 'instre') {
-      return(
-        <div>
-          <h2> INSTRE DATASET </h2>
-          <Slider {...settings}>
-            { this.state.qimList_instre  ? this.state.qimList_instre.map((obj)=>{
-              if (!(obj.image.length == 0)){
-                return(<div key={obj.image} ><img className="img-slide" onClick= {this.onClickSlide.bind(this,obj)}
-                        src={`${this.state.url_imgs.instre}?path=${obj.image} `} /></div>);
-              }
-            }) : null }
-          </Slider>
-        </div>
-      );
-    }
+    // let dataset = 'oxford';
+    let dataset = this.state.datasetChosed.name;
+
+    return(
+      <div>
+        <h2> {dataset.toUpperCase()} DATASET </h2>
+        <Slider {...settings}>
+          { this.state.qimList  ? this.state.qimList.map((obj,i)=>{
+
+            let id = obj.image;
+            
+            //IDEA: If it's instre we can't send the path. We need to change the id
+            if(obj.image.indexOf("/") != -1){
+              id = getIdFromPath(obj.image, this.state.imlist);
+            }
+            if (!(id && id.length == 0)){
+              return(<div key={`key-${i}`} ><img className="img-slide" onClick= {this.onClickSlide.bind(this,obj)}
+                      src={this.state.url_imgs+id +`?dataset=${dataset}`} /></div>);
+            }
+          }) : null }
+        </Slider>
+      </div>
+    );
   }
 
   render() {
@@ -241,33 +226,36 @@ class Home extends Component {
             <ProgressBar completed={this.state.completeLoading} loading={this.state.startLoading} resetLoading={this.resetLoading.bind(this)} />
           </div>
         </section>
-        {/* <section className="choose-dataset">
+        <section className="choose-dataset">
 
           <img src="../../background.png" alt="Smiley face" height="250" />
           <h5> Choose in which dataset do you want to look up for similar images: </h5>
 
           <label className="radio-inline" onClick={()=>{
-              this.props.getQimListOxford();
+              this.props.resetQimList();
               let datasetChosed = { condition: true, name:"oxford"};
+              this.props.getQimList(datasetChosed.name);
               this.setState({datasetChosed});
           }} ><input type="radio" name="optradio" />OXFORD</label>
 
           <label className="radio-inline" onClick={()=>{
-            this.props.getQimListParis();
+            this.props.resetQimList();
             let datasetChosed = { condition: true, name:"paris"};
+            this.props.getQimList(datasetChosed.name);
             this.setState({datasetChosed});
           }} ><input type="radio" name="optradio" />PARIS</label>
 
           <label className="radio-inline" onClick={()=>{
-            this.props.getQimListInstre();
+            this.props.resetQimList();
             let datasetChosed = { condition: true, name:"instre"};
+            this.props.getQimList(datasetChosed.name);
             this.setState({datasetChosed});
           }} ><input type="radio" name="optradio" />INSTRE</label>
 
-        </section> */}
-        {/* <div>
+        </section>
+        <div>
           {this.renderDemos()}
-        </div> */}
+        </div>
 
       </div>
     );
@@ -277,8 +265,9 @@ class Home extends Component {
 function mapStateToProps(state) {
   return {
            infoIMG: state.reducerImages.img_info,
-           qimList: state.reducerImages.qimList_dataset
+           qimList: state.reducerImages.qimList_dataset,
+           imlist: state.reducerImages.imlist
          };
 }
 
-export default connect(mapStateToProps, { postEncodedInfo, getQimList, resetRanking })(Home);
+export default connect(mapStateToProps, { postEncodedInfo, getQimList, resetRanking, resetQimList, getImlist })(Home);

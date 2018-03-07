@@ -8,12 +8,13 @@ import Gallery from 'react-grid-gallery';
 
 import { getQimList, resetRanking, getImlist } from '../../actions/index';
 
-import { getIdFromPath, getPathfromId } from '../../../utils/index';
+import { getIdFromPath } from '../../../utils/index';
 
 import '../../styles/main-page.scss';
 
 const ItemsPerPage = 28;
 const ROOT_URL = 'http://localhost:5000';
+
 class DatasetPage extends Component {
 
   constructor(props) {
@@ -25,7 +26,7 @@ class DatasetPage extends Component {
       title: this.props.route.path,
       activePage: 1,
       n_pages: 0,
-      qimList: this.props.qimList ? this.props.qimList : [],
+      qimList: this.props.qimList ? this.props.qimList.slice(0,56) : [],
       imlist: this.props.imlist ? this.props.imlist: []
     };
   }
@@ -40,7 +41,7 @@ class DatasetPage extends Component {
           (JSON.stringify(this.props.route.path) !== JSON.stringify(newProps.route.path)) ||
           (JSON.stringify(this.props.imlist) !== JSON.stringify(newProps.imlist))) {
           this.setState({
-              qimList: newProps.qimList && newProps.qimList.length ? newProps.qimList : [],
+              qimList: newProps.qimList && newProps.qimList.length ? newProps.qimList.slice(0,56) : [],
               imlist: newProps.imlist && newProps.imlist.length ? newProps.imlist: [],
               n_pages:  newProps.qimList ? Math.ceil(newProps.qimList.length / ItemsPerPage) : null,
               title: newProps.route.path,
@@ -77,6 +78,7 @@ class DatasetPage extends Component {
       this.state.qimList.map((obj, j)=> {
       let id = obj.image;
 
+      //IDEA: If it's instre we can't send the path. We need to change the id
       if(obj.image.indexOf("/") != -1){
         id = getIdFromPath(obj.image, this.state.imlist);
       }
