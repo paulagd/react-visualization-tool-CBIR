@@ -34,15 +34,12 @@ export function getQimList(dataset) {
     };
 }
 
-export function getIdFromPath(dataset,path) {
-    let data = {dataset, path};
-
-    console.log('data',data);
+export function getImlist(dataset) {
     return function(dispatch) {
-        axios.post(`${ROOT_URL}/getIdFromPath`, data)
+        axios.post(`${ROOT_URL}/getIimlist`, {dataset})
         .then(request => {
             dispatch({
-                type: TYPES.GET_ID_FROM_PATH,
+                type: TYPES.GET_IMLIST,
                 payload: request
             });
         }).catch((response) => {
@@ -50,21 +47,35 @@ export function getIdFromPath(dataset,path) {
         });
     };
 }
-
-export function getPathfromId(dataset,id) {
-
-    return function(dispatch) {
-        axios.post(`${ROOT_URL}/getPathfromId/${id}`, {dataset})
-        .then(request => {
-            dispatch({
-                type: TYPES.GET_PATH_FROM_ID,
-                payload: request
-            });
-        }).catch((response) => {
-            dispatch(errorMessage(`${response} in action getQimListDataset`));
-        });
-    };
-}
+// export function getIdFromPath(dataset,path) {
+//     let data = {dataset, path};
+//     return function(dispatch) {
+//         axios.post(`${ROOT_URL}/getIdFromPath`, data)
+//         .then(request => {
+//             dispatch({
+//                 type: TYPES.GET_ID_FROM_PATH,
+//                 payload: request
+//             });
+//         }).catch((response) => {
+//             dispatch(errorMessage(`${response} in action getQimListDataset`));
+//         });
+//     };
+// }
+//
+// export function getPathfromId(dataset,id) {
+//
+//     return function(dispatch) {
+//         axios.post(`${ROOT_URL}/getPathfromId/${id}`, {dataset})
+//         .then(request => {
+//             dispatch({
+//                 type: TYPES.GET_PATH_FROM_ID,
+//                 payload: request
+//             });
+//         }).catch((response) => {
+//             dispatch(errorMessage(`${response} in action getQimListDataset`));
+//         });
+//     };
+// }
 
 //MODE QE
 export function sendFeedback_receiveRanking(id, url, encoded_image, dataset, path, similar_list, mode) {

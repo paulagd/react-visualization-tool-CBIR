@@ -6,7 +6,9 @@ import { browserHistory } from 'react-router';
 import { ReactRpg } from 'react-rpg';
 import Gallery from 'react-grid-gallery';
 
-import { getQimList, resetRanking, getIdFromPath, getPathfromId} from '../../actions/index';
+import { getQimList, resetRanking, getImlist } from '../../actions/index';
+
+import { getIdFromPath, getPathfromId } from '../../../utils/index';
 
 import '../../styles/main-page.scss';
 
@@ -23,22 +25,27 @@ class DatasetPage extends Component {
       title: this.props.route.path,
       activePage: 1,
       n_pages: 0,
-      qimList: this.props.qimList ? this.props.qimList : []
+      qimList: this.props.qimList ? this.props.qimList : [],
+      imlist: this.props.imlist ? this.props.imlist: []
     };
   }
 
   componentWillMount() { //componentDidMount
     this.props.getQimList(this.props.route.path);
+    this.props.getImlist('instre');
+
     // this.props.getIdFromPath('instre','INSTRE-S1/01a_canada_book/035.jpg');
-    this.props.getPathfromId('instre','33');
+    // this.props.getPathfromId('instre','33');
   }
 
   componentWillReceiveProps(newProps) {
       if((JSON.stringify(this.props.qimList) !== JSON.stringify(newProps.qimList)) ||
           (JSON.stringify(this.props.route.path) !== JSON.stringify(newProps.route.path)) ||
+          (JSON.stringify(this.props.imlist) !== JSON.stringify(newProps.imlist)) ||
           (JSON.stringify(this.props.route.url_imgs) !== JSON.stringify(newProps.route.url_imgs))) {
           this.setState({
               qimList: newProps.qimList && newProps.qimList.length ? newProps.qimList : [],
+              imlist: newProps.imlist && newProps.imlist.length ? newProps.imlist: [],
               n_pages:  newProps.qimList ? Math.ceil(newProps.qimList.length / ItemsPerPage) : null,
               url_imgs: newProps.route.url_imgs,
               title: newProps.route.path,
@@ -69,21 +76,49 @@ class DatasetPage extends Component {
   displayImages() {
     //display the 55 principal images in pages containing 28 images
     let array = [];
-    this.state.qimList.map((obj, j)=> {
-      array.push({
-          url: this.state.url_imgs + obj.image,
-          clickHandler: (path) => {
-              this.props.resetRanking();
-              // when clicked, it has to show the related images
-              browserHistory.push({
-                pathname: `/images/${obj.image.replace(/.jpg$/,"")}`,
-                query: { dataset: this.state.title }  //TODO
-              });
-            },
-        });
-    });
-    array = this.splitArray(array, ItemsPerPage);
-    return array;
+
+    if(this.state.imlist && this.state.imlist.length){
+      console.log("¿¿¿¿¿¿¿ imlist no es undefined ??????");
+      const id = getIdFromPath('INSTRE-S1/01a_canada_book/002.jpg', this.state.imlist);
+      console.log('id',id);
+      const path = getPathfromId('3', this.state.imlist);
+      console.log('path',path);
+
+    }
+
+    // this.state.qimList.map((obj, j)=> {
+    //
+    //  // if(obj.image.indexOf("/") != -1){
+    // if((this.state.imlist && this.state.imlist.length) &&
+    //     obj.image.indexOf("/") != -1 && this.state.imlist){
+    //     // this.props.getIdFromPath(this.state.title,obj.image);
+    //
+    //   }
+    //   // console.log("IMLIST", this.state.imlist);
+    //   array.push({
+    //       url: this.state.url_imgs + obj.image,
+    //       clickHandler: (path) => {
+    //           this.props.resetRanking();
+    //           // when clicked, it has to show the related images
+    //           browserHistory.push({
+    //             pathname: `/images/${obj.image.replace(/.jpg$/,"")}`,
+    //             query: { dataset: this.state.title }
+    //           });
+    //         },
+    //
+    //         // url: `${this.state.url_imgs}?path=${obj.image} `,
+    //         // clickHandler: (path) => {
+    //         //     // when clicked, it has to show the related images
+    //         //     this.props.resetRanking();
+    //         //     browserHistory.push({
+    //         //       pathname: `/images/instre_id`,
+    //         //       query: { dataset: 'instre', path: obj.image }
+    //         //     });
+    //         //   },
+    //     });
+    // });
+    // array = this.splitArray(array, ItemsPerPage);
+    // return array;
   }
 
   handlePageChange(pageNumber) {
@@ -91,7 +126,10 @@ class DatasetPage extends Component {
   }
 
   renderContent() {
+     // this.displayImages();
     const array = this.displayImages();
+
+    console.log("--------array-------",array);
 
     return (
       <div className = "dataset-content" >
@@ -104,7 +142,7 @@ class DatasetPage extends Component {
           rowHeight = {260}
           margin = {10}
         /> */}
-        <ReactRpg imagesArray={array[this.state.activePage - 1]} columns={[2, 4]} padding={10} />
+        <ReactRpg imagesArray={array ? array[this.state.activePage - 1] : []} columns={[2, 4]} padding={10} />
         <Pagination
          activePage={this.state.activePage}
          itemsCountPerPage={ItemsPerPage}
@@ -129,8 +167,9 @@ class DatasetPage extends Component {
 }
 
 function mapStateToProps(state) {
-  // TODO: REDUCER??
-  return { qimList: state.reducerImages.qimList_dataset };
+  return { qimList: state.reducerImages.qimList_dataset,
+           imlist: state.reducerImages.imlist
+         };
 }
 
-export default connect(mapStateToProps, { getQimList, resetRanking, getIdFromPath, getPathfromId })(DatasetPage);
+export default connect(mapStateToProps, { getQimList, resetRanking, getImlist })(DatasetPage);
