@@ -105,11 +105,8 @@ export function resetAnnotations() {
 
 export function getQimList(dataset) {
 
-    // Dataset first letter toUpperCase
-    const dataset_modified  = dataset.charAt(0).toUpperCase() + dataset.slice(1);
-
     return function(dispatch) {
-        axios.get(`${ROOT_URL}/getQimList${dataset_modified}/`)
+        axios.post(`${ROOT_URL}/getQimListDataset`,{dataset})
         .then(request => {
             dispatch({
                 type: TYPES.GET_QIMLIST,

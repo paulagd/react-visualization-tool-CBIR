@@ -32,7 +32,11 @@ export default (
                 Store.dispatch(resetQimList());
                 Store.dispatch(getQimList('paris'));
              }} />
-          {/* <Route path="instre" component={DatasetPage} url_imgs={instre.url_imgs} /> */}
+          <Route path="instre" component={DatasetPage} url_imgs={instre.url_imgs}
+            onEnter={()=>{
+                Store.dispatch(resetQimList());
+                Store.dispatch(getQimList('instre'));
+             }} />
           {/* <Route path=":id" component={ImageWithRelateds} /> */}
         </Route>
 

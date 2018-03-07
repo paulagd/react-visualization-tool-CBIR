@@ -61,6 +61,7 @@ class InstrePage extends Component {
     //display the 55 principal images in pages containing 28 images
     let array = [];
     this.state.qimList.map((obj, j)=> {
+      console.log(obj);
       array.push({
           url: `${this.state.url_imgs}?path=${obj.image} `,
           clickHandler: (path) => {

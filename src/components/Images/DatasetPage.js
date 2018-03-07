@@ -67,7 +67,6 @@ class DatasetPage extends Component {
   displayImages() {
     //display the 55 principal images in pages containing 28 images
     let array = [];
-    console.log(this.state.qimList);
     this.state.qimList.map((obj, j)=> {
       array.push({
           url: this.state.url_imgs + obj.image,
