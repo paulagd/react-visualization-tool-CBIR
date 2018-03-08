@@ -93,9 +93,10 @@ class DatasetPage extends Component {
           url: this.state.url_imgs + id +`?dataset=${this.state.title}`,
           clickHandler: (path) => {
               this.props.resetRanking();
+
               // when clicked, it has to show the related images
               browserHistory.push({
-                pathname: `/images/${id.replace(/.jpg$/,"")}`,
+                pathname: `/images/${id}`,
                 query: { dataset: this.state.title}
               });
             },

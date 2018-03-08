@@ -3,15 +3,19 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Pagination from 'react-js-pagination';
 import { Link, browserHistory } from 'react-router';
-import NotFound from '../NotFound';
+import NotFound from '../../common/NotFound';
 import ImageGallery from 'react-image-gallery';
 import Gallery from 'react-grid-gallery';
 import Loader from 'halogen/FadeLoader';
 
+const ROOT_URL = 'http://localhost:5000';
 
-import { getRankinOfImage , errorMessage, resetAnnotations, resetRanking, sendFeedback_receiveRanking, send_Annotations } from '../../actions/index';
+import { getIdFromPath, getPathfromId } from '../../../utils/index';
 
-import '../styles/image-with-relateds.scss';
+import { getRankinOfImage ,getImlist, errorMessage, resetAnnotations, resetRanking,
+  sendFeedback_receiveRanking, send_Annotations } from '../../actions/index';
+
+import '../../styles/image-with-relateds.scss';
 
 const ItemsPerPage = 28;
 
@@ -22,11 +26,7 @@ class ImageWithRelateds extends Component {
         this.state = {
           id: this.props.params.id,
           url: this.props.location.query && this.props.location.query.url ? this.props.location.query.url : null,
-          url_imgs: {
-            oxford: 'http://localhost:5000/getImageOxfordById/',
-            paris: 'http://localhost:5000/getImageParisById/',
-            instre: 'http://localhost:5000/getImageInstreById'
-          },
+          url_imgs: `${ROOT_URL}/getImageById/`,
           relatedImages:{
             list: this.props.relatedImages && this.props.relatedImages.list && this.props.relatedImages.list.length ? this.props.relatedImages.list : [],
             dataset: this.props.relatedImages && this.props.relatedImages.dataset && this.props.relatedImages.dataset.length ? this.props.relatedImages.dataset : [],
@@ -34,17 +34,24 @@ class ImageWithRelateds extends Component {
           activePage: 1,
           activeMode:"e",
           images : [],
+          imlist: this.props.imlist ? this.props.imlist: []
           // images :this.props.relatedImages && this.props.relatedImages.list && this.props.relatedImages.list.length ? this.display_ReactRpg_Images() : []
         };
+    }
+    componentDidMount() {
+      this.props.getImlist('instre');
+      this.callRankingAction(null);
     }
 
     componentWillReceiveProps(newProps) {
         if((JSON.stringify(this.props.relatedImages.list) !== JSON.stringify(newProps.relatedImages.list)) ||
            (JSON.stringify(this.props.relatedImages.dataset) !== JSON.stringify(newProps.relatedImages.dataset)) ||
            (JSON.stringify(this.props.params.id) !== JSON.stringify(newProps.params.id)) ||
+           (JSON.stringify(this.props.imlist) !== JSON.stringify(newProps.imlist)) ||
            (JSON.stringify(this.props.location.query.url) !== JSON.stringify(newProps.location.query.url))) {
             this.setState({
               id: newProps.params.id,
+              imlist: newProps.imlist && newProps.imlist.length ? newProps.imlist: [],
               url: newProps.location.query && newProps.location.query.url ? newProps.location.query.url : null,
               relatedImages:{
                 list: newProps.relatedImages && newProps.relatedImages.list && newProps.relatedImages.list.length ? newProps.relatedImages.list : [],
@@ -56,18 +63,18 @@ class ImageWithRelateds extends Component {
         }
     }
 
-    componentWillMount() {
-      this.callRankingAction(null);
-    }
-
     callRankingAction(id) {
       let dataset = this.props.location.query.dataset;
       let path =  null;
       let ide = id ? id : this.state.id;
+
       if(ide == "instre_id"){
         path = this.props.location.query.path;
       }
-      this.state.url ? this.props.getRankinOfImage(null, this.state.url, this.props.infoIMG, dataset, path) : this.props.getRankinOfImage(ide, null, null , dataset, path);
+
+      this.state.url ? this.props.getRankinOfImage(null, this.state.url, this.props.infoIMG, dataset, path) :
+        this.props.getRankinOfImage(ide, null, null , dataset, path);
+
       this.setState({activePage:1});
     }
 
@@ -102,12 +109,18 @@ class ImageWithRelateds extends Component {
       let dataset = this.state.relatedImages.dataset;
       let array = [];
       this.state.relatedImages.list && this.state.relatedImages.list.length ? this.state.relatedImages.list.map((obj, j)=> {
-        let url = "";
-        if (dataset == "instre"){
-          url = `${this.state.url_imgs.instre}?path=${obj.Image}.jpg `;
-        }else{
-          url = this.state.url_imgs[dataset] + obj.Image + '.jpg';
+        // if (dataset == "instre"){
+        //   url = `${this.state.url_imgs.instre}?path=${obj.Image}.jpg `;
+        // }else{
+        //   url = this.state.url_imgs[dataset] + obj.Image + '.jpg';
+        // }
+        let url = this.state.url_imgs+ obj.Image +`.jpg?dataset=${dataset}`;
+
+        if(obj.Image.indexOf("/") != -1){
+          let id_aux = getIdFromPath(obj.Image, this.state.imlist);
+          url = this.state.url_imgs+ id_aux +`?dataset=${dataset}`;
         }
+
         array.push({
             url:url,
             clickHandler: (path) => {
@@ -186,12 +199,19 @@ class ImageWithRelateds extends Component {
       let dataset = this.state.relatedImages.dataset;
 
       this.state.relatedImages.list && this.state.relatedImages.list.length ? this.state.relatedImages.list.map((obj, j)=> {
-        let url = "";
-        if (dataset == "instre"){
-          url = `${this.state.url_imgs.instre}?path=${obj.Image}.jpg `;
-        }else{
-          url = this.state.url_imgs[dataset] + obj.Image + '.jpg';
+        // let url = "";
+        // if (dataset == "instre"){
+        //   url = `${this.state.url_imgs.instre}?path=${obj.Image}.jpg `;
+        // }else{
+        //   url = this.state.url_imgs[dataset] + obj.Image + '.jpg';
+        // }
+        let url = this.state.url_imgs+ obj.Image +`.jpg?dataset=${dataset}`;
+
+        if(obj.Image.indexOf("/") != -1){
+          let id_aux = getIdFromPath(obj.Image, this.state.imlist);
+          url = this.state.url_imgs+ id_aux +`?dataset=${dataset}`;
         }
+
         (mode == 'a') ?
           array.push({
               src:obj ? obj.Image : 'error',
@@ -314,20 +334,30 @@ class ImageWithRelateds extends Component {
         const n_pages =  Math.ceil(this.state.relatedImages && this.state.relatedImages.list ? this.state.relatedImages.list.length/ ItemsPerPage : 0 );
 
         //SET PROPERTIES MAIN IMAGE
-        let url = `${this.state.url_imgs[dataset]}${this.state.id}.jpg`;
-        if(dataset == "instre"){
-          url = `${this.state.url_imgs.instre}?path=${this.props.location.query.path} `;
 
-          if(this.props.location.query.path.substr(-4) != '.jpg'){
-            url = `${this.state.url_imgs.instre}?path=${this.props.location.query.path}.jpg `;
-          }
+        let url = this.state.url_imgs+ this.state.id +`?dataset=${dataset}`;
+
+        if(this.state.id.indexOf("/") != -1){
+          let id_aux = getIdFromPath(this.state.id, this.state.imlist);
+          url = this.state.url_imgs+ id_aux +`?dataset=${dataset}`;
         }
+        // TODO: unificar
+        // let url = `${this.state.url_imgs[dataset]}${this.state.id}.jpg`;
+
+        // if(dataset == "instre"){
+        //   url = `${this.state.url_imgs.instre}?path=${this.props.location.query.path} `;
+        //
+        //   if(this.props.location.query.path.substr(-4) != '.jpg'){
+        //     url = `${this.state.url_imgs.instre}?path=${this.props.location.query.path}.jpg `;
+        //   }
+        // }
         const img  = this.state.url ? this.state.url : url;
         const image = [{
           original: img,
           originalClass: 'portrait-slide',
         }];
 
+        // console.log("IMAGEEEEEEN",img);
         return (
           <div className = "wrap-content" >
               <div className="top-content">
@@ -337,7 +367,7 @@ class ImageWithRelateds extends Component {
                   showFullscreenButton={false}
                   showPlayButton={false}
                   showThumbnails={false}/>
-                  <div className="text-portrait-slide">
+                  {/* <div className="text-portrait-slide">
                       {this.renderAccuracy()}
                       {this.renderAnnotationsSent()}
                       <label className="first" >  Choose the mode you want to be in: </label>
@@ -358,9 +388,9 @@ class ImageWithRelateds extends Component {
                           <button className="button submit" type="button" onClick={this.submitAnnotations.bind((this))}>
                             Submit annotations</button> : null
                       }
-                  </div>
+                  </div> */}
               </div>
-              <div className = "images-content" >
+              {/* <div className = "images-content" >
                 {((array.length< 1) || !(this.state.relatedImages.list && this.state.relatedImages.list.length)) ?
                   <Loader className="loader" color="green" size="20px" margin="0px"/> :
                   (  !(this.state.activeMode == 'e') ?
@@ -387,7 +417,7 @@ class ImageWithRelateds extends Component {
                       <ReactRpg imagesArray={array[this.state.activePage - 1]} columns={[1, 2, 4]} padding={10} />
                   </div>
                 )}
-              </div>
+              </div> */}
               <div className="footer-content">
 
                   <Pagination
@@ -486,13 +516,15 @@ class ImageWithRelateds extends Component {
 }
 
 function mapStateToProps(state) {
+  // console.log("statee",state);
   return { relatedImages: { list: state.reducerRelatedImages.getRankin.img_list, dataset: state.reducerRelatedImages.getRankin.dataset} ,
            accuracy: state.reducerRelatedImages.getRankin.accuracy ,
            infoIMG: state.reducerRelatedImages.img_info ,
            messageError: state.reducerErrorMessage.messageError,
-           annotations_sent: state.reducerRelatedImages.getRankin.confirm
+           annotations_sent: state.reducerRelatedImages.getRankin.confirm,
+           imlist: state.reducerImages.imlist
          };
 }
 
 
-export default connect(mapStateToProps, { getRankinOfImage, errorMessage, resetRanking, resetAnnotations, sendFeedback_receiveRanking, send_Annotations })(ImageWithRelateds);
+export default connect(mapStateToProps, { getRankinOfImage, getImlist, errorMessage, resetRanking, resetAnnotations, sendFeedback_receiveRanking, send_Annotations })(ImageWithRelateds);

@@ -8,7 +8,7 @@ import Store from './store';
 import Home from './components/Home';
 
 import DatasetPage from './components/Images/DatasetPage';
-// import ImageWithRelateds from './components/Images/ImageWithRelateds';
+import ImageWithRelateds from './components/Images/ImageWithRelateds';
 
 import { options_NavBar } from './customize.js';
 import { getQimList, resetQimList} from './actions/index';
@@ -34,7 +34,7 @@ export default (
                 Store.dispatch(resetQimList());
                 Store.dispatch(getQimList('instre'));
              }} />
-          {/* <Route path=":id" component={ImageWithRelateds} /> */}
+          <Route path=":id" component={ImageWithRelateds} />
         </Route>
 
         <Route path="*" component={NotFound} />

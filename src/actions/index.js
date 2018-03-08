@@ -1,17 +1,22 @@
 import axios from 'axios';
 import * as TYPES from './types';
+import { getPathfromId } from '../../utils/index';
 
 const ROOT_URL = 'http://localhost:5000';
 
 //GET SORTED RANKING OF ID IMAGE
-export function getRankinOfImage(id, url, encoded_image, dataset) {
-    const query = id ? `${ROOT_URL}/getRankinById/${id}.json` : `${ROOT_URL}/getRankinById/unknown_id`;
+export function getRankinOfImage(id, url, encoded_image, dataset, path) {
+    // const query = id ? `${ROOT_URL}/getRankinById/${id}.json` : `${ROOT_URL}/getRankinById/unknown_id`;
 
     // let path = null; //TODO: si quiere el path hacer la conversion getPathfromId
+    if(typeof(id)=='number'){
+      id = getPathfromId(id, this.state.imlist);
+      path = id;
+    }
+    id = id.replace(/.jpg$/,"");
 
-    // const query = `${ROOT_URL}/getRankinById/${id}.json`;
     return function(dispatch) {
-        axios.post(query, { dataset, url, encoded_image, path})
+        axios.post(`${ROOT_URL}/getRankinById/${id}.json`, { dataset, url, encoded_image, path})
         .then(request => {
             dispatch({
                 type: TYPES.GET_RANKIN_IMG,
