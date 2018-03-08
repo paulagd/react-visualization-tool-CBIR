@@ -6,7 +6,7 @@ import { browserHistory } from 'react-router';
 import { ReactRpg } from 'react-rpg';
 import Gallery from 'react-grid-gallery';
 
-import { getQimList, resetRanking, getImlist } from '../../actions/index';
+import { getQimList, resetRanking, getImlist, resetQimList } from '../../actions/index';
 
 import { getIdFromPath } from '../../../utils/index';
 
@@ -31,16 +31,25 @@ class DatasetPage extends Component {
     };
   }
 
-  componentWillMount() { //componentDidMount
+  componentDidMount() { //componentDidMount
     this.props.getQimList(this.props.route.path);
     this.props.getImlist('instre');
+    console.log("mount DatasetPage");
+  }
+
+  componentWillUnmount() {
+    this.props.resetQimList();
+    console.log("UNmount DatasetPage");
+
   }
 
   componentWillReceiveProps(newProps) {
       if((JSON.stringify(this.props.qimList) !== JSON.stringify(newProps.qimList)) ||
           (JSON.stringify(this.props.route.path) !== JSON.stringify(newProps.route.path)) ||
           (JSON.stringify(this.props.imlist) !== JSON.stringify(newProps.imlist))) {
+
           this.setState({
+              activePage:1,
               qimList: newProps.qimList && newProps.qimList.length ? newProps.qimList.slice(0,56) : [],
               imlist: newProps.imlist && newProps.imlist.length ? newProps.imlist: [],
               n_pages:  newProps.qimList ? Math.ceil(newProps.qimList.length / ItemsPerPage) : null,
@@ -148,4 +157,4 @@ function mapStateToProps(state) {
          };
 }
 
-export default connect(mapStateToProps, { getQimList, resetRanking, getImlist })(DatasetPage);
+export default connect(mapStateToProps, { getQimList, resetRanking, getImlist, resetQimList })(DatasetPage);

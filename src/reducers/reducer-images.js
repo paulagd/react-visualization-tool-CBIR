@@ -16,6 +16,11 @@ export default function(state = INITIAL_STATE, action) {
         qimList_dataset: null,
       });
 
+    case TYPES.RESET_IMLIST:
+      return Object.assign({}, state, {
+        imlist: null,
+      });
+
     case TYPES.GET_IMLIST:
       return Object.assign({}, state, {
         imlist: action.payload.data

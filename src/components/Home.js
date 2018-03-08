@@ -8,7 +8,7 @@ import Slider from 'react-slick';
 
 import { getIdFromPath } from '../../utils/index';
 
-import { postEncodedInfo, getQimList, resetRanking, resetQimList, getImlist } from '../actions/index';
+import { postEncodedInfo, getQimList, resetRanking, resetQimList, getImlist, resetImlist } from '../actions/index';
 
 import '../styles/home.scss';
 import '../styles/loading-bar.scss';
@@ -35,9 +35,28 @@ class Home extends Component {
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.getImlist('instre');
+    console.log("mount home");
+    this.mounted = true;
+    this.timeout = this.timer();
   }
+
+  componentWillUnmount() {
+    // this.props.resetQimList();
+    console.log("unmount home",this.refs.myRef);
+    this.props.resetImlist();
+    this.mounted = false;
+    clearTimeout(this.timeout);
+  }
+
+  timer(){
+    setTimeout(() => {
+      (this.mounted && this.setState({ error: true })) || null;
+    }, 8000);
+  }
+
+
 
   componentWillReceiveProps(newProps) {
       if((JSON.stringify(this.props.qimList) !== JSON.stringify(newProps.qimList)) ||
@@ -164,37 +183,41 @@ class Home extends Component {
       className:"slider",
       speed: 3000,
       slidesToShow: 3,
-      slidesToScroll: 1,
+      slidesToScroll: 2,
       arrows:true,
       pauseOnHover:true,
       pauseOnFocus:true,
       accessibility:true,
-      autoplay:true,
+      // autoplay:true,
     };
 
-    // let dataset = 'oxford';
     let dataset = this.state.datasetChosed.name;
 
-    return(
-      <div>
-        <h2> {dataset.toUpperCase()} DATASET </h2>
-        <Slider {...settings}>
-          { this.state.qimList  ? this.state.qimList.map((obj,i)=>{
+    if(dataset && dataset.length){
+      return(
+        <div>
+          <h2> {dataset.toUpperCase()} DATASET </h2>
+          <Slider {...settings}>
+            { this.state.qimList  ? this.state.qimList.map((obj,i)=>{
 
-            let id = obj.image;
-            
-            //IDEA: If it's instre we can't send the path. We need to change the id
-            if(obj.image.indexOf("/") != -1){
-              id = getIdFromPath(obj.image, this.state.imlist);
-            }
-            if (!(id && id.length == 0)){
-              return(<div key={`key-${i}`} ><img className="img-slide" onClick= {this.onClickSlide.bind(this,obj)}
-                      src={this.state.url_imgs+id +`?dataset=${dataset}`} /></div>);
-            }
-          }) : null }
-        </Slider>
-      </div>
-    );
+              let id = obj.image;
+
+              //IDEA: If it's instre we can't send the path. We need to change the id
+              if(obj.image.indexOf("/") != -1){
+                id = getIdFromPath(obj.image, this.state.imlist);
+              }
+              if (!(id && id.length == 0)){
+                return(<div key={`key-unique-${i}`} >
+                          <img className="img-slide"
+                            onClick= {this.onClickSlide.bind(this,obj)}
+                          src={this.state.url_imgs+id +`?dataset=${dataset}`} />
+                       </div>);
+              }
+            }) : null }
+          </Slider>
+        </div>
+      );
+    }
   }
 
   render() {
@@ -270,4 +293,4 @@ function mapStateToProps(state) {
          };
 }
 
-export default connect(mapStateToProps, { postEncodedInfo, getQimList, resetRanking, resetQimList, getImlist })(Home);
+export default connect(mapStateToProps, { postEncodedInfo, getQimList, resetRanking, resetQimList, getImlist, resetImlist})(Home);

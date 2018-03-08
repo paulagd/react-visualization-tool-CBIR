@@ -113,7 +113,6 @@ export function resetRanking() {
     };
 }
 
-//RESET_annotations
 export function resetQimList() {
     return function(dispatch) {
           dispatch({
@@ -124,6 +123,18 @@ export function resetQimList() {
         // });
     };
 }
+
+export function resetImlist() {
+    return function(dispatch) {
+          dispatch({
+              type: TYPES.RESET_IMLIST
+          });
+        // }.catch((response) => {
+        //     dispatch(errorMessage(`${response} in action getRankinOfImage`));
+        // });
+    };
+}
+
 //RESET_annotations
 export function resetAnnotations() {
     return function(dispatch) {
