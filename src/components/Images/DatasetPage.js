@@ -34,13 +34,10 @@ class DatasetPage extends Component {
   componentDidMount() { //componentDidMount
     this.props.getQimList(this.props.route.path);
     this.props.getImlist('instre');
-    console.log("mount DatasetPage");
   }
 
   componentWillUnmount() {
     this.props.resetQimList();
-    console.log("UNmount DatasetPage");
-
   }
 
   componentWillReceiveProps(newProps) {

@@ -37,26 +37,12 @@ class Home extends Component {
 
   componentDidMount() {
     this.props.getImlist('instre');
-    console.log("mount home");
-    this.mounted = true;
-    this.timeout = this.timer();
   }
 
   componentWillUnmount() {
     // this.props.resetQimList();
-    console.log("unmount home",this.refs.myRef);
     this.props.resetImlist();
-    this.mounted = false;
-    clearTimeout(this.timeout);
   }
-
-  timer(){
-    setTimeout(() => {
-      (this.mounted && this.setState({ error: true })) || null;
-    }, 8000);
-  }
-
-
 
   componentWillReceiveProps(newProps) {
       if((JSON.stringify(this.props.qimList) !== JSON.stringify(newProps.qimList)) ||
