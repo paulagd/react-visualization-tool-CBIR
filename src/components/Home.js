@@ -111,7 +111,6 @@ class Home extends Component {
   }
 
 
-  // TODO: unificar
   handleSubmit(event) {
     //submnit url photos
 
@@ -122,7 +121,6 @@ class Home extends Component {
         event.preventDefault();
         this.props.resetRanking();
         if (this.state.url) {
-          // alert('A url was submitted: ' + this.state.url);
           browserHistory.push({
             pathname: '/images/unknown_id',
             query: { url: this.state.url , encoded_image:null, dataset: this.state.datasetChosed.name}
@@ -145,9 +143,8 @@ class Home extends Component {
       if(this.state.datasetChosed.condition) {
         this.props.resetRanking();
         this.props.postEncodedInfo(this.state.encoded_image);
+
         if (this.state.files && this.state.files.length) {
-          // alert('A file was submitted: ' + this.state.files[0].name);
-          alert('FINE!!');
           browserHistory.push({
             pathname: '/images/unknown_id',
             query: { url: this.state.files[0].preview, dataset: this.state.datasetChosed.name}

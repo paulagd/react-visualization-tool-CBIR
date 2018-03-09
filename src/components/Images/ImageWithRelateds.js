@@ -34,7 +34,8 @@ class ImageWithRelateds extends Component {
           activePage: 1,
           activeMode:"e",
           images : [],
-          imlist: this.props.imlist ? this.props.imlist: []
+          imlist: this.props.imlist ? this.props.imlist: [],
+          accuracy: this.props.accuracy ? this.props.accuracy : null
           // images :this.props.relatedImages && this.props.relatedImages.list && this.props.relatedImages.list.length ? this.display_ReactRpg_Images() : []
         };
     }
@@ -48,9 +49,11 @@ class ImageWithRelateds extends Component {
            (JSON.stringify(this.props.relatedImages.dataset) !== JSON.stringify(newProps.relatedImages.dataset)) ||
            (JSON.stringify(this.props.params.id) !== JSON.stringify(newProps.params.id)) ||
            (JSON.stringify(this.props.imlist) !== JSON.stringify(newProps.imlist)) ||
+           (JSON.stringify(this.props.accuracy) !== JSON.stringify(newProps.accuracy)) ||
            (JSON.stringify(this.props.location.query.url) !== JSON.stringify(newProps.location.query.url))) {
             this.setState({
               id: newProps.params.id,
+              accuracy: newProps.accuracy ? newProps.accuracy : null,
               imlist: newProps.imlist && newProps.imlist.length ? newProps.imlist: [],
               url: newProps.location.query && newProps.location.query.url ? newProps.location.query.url : null,
               relatedImages:{
@@ -89,15 +92,16 @@ class ImageWithRelateds extends Component {
       this.setState({ activeMode: mode});
 
       if(!(mode == 'e')){
-        this.setState({images: this.state.relatedImages && this.state.relatedImages.list && this.state.relatedImages.list.length ? this.display_Gallery_Images(mode) : []});
+        this.setState({ accuracy:null ,images: this.state.relatedImages && this.state.relatedImages.list
+          && this.state.relatedImages.list.length ? this.display_Gallery_Images(mode) : []});
       } else {
-        this.setState({images: this.state.relatedImages && this.state.relatedImages.list && this.state.relatedImages.list.length ? this.display_ReactRpg_Images() : []});
+        this.setState({accuracy:null , images: this.state.relatedImages && this.state.relatedImages.list
+          && this.state.relatedImages.list.length ? this.display_ReactRpg_Images() : []});
       }
       this.props.resetAnnotations();
 
     }
 
-// TODO : MODE Annotation and query expansion
     display_ReactRpg_Images() {
 
       //display the 5000 images in order divided in pages containing 28 images (ItemsPerPage)
@@ -191,7 +195,8 @@ class ImageWithRelateds extends Component {
       let array = [];
       let dataset = this.state.relatedImages.dataset;
 
-      this.state.relatedImages.list && this.state.relatedImages.list.length ? this.state.relatedImages.list.map((obj, j)=> {
+      this.state.relatedImages.list && this.state.relatedImages.list.length ?
+        this.state.relatedImages.list.map((obj, j)=> {
 
         let url = this.state.url_imgs+ obj.Image +`.jpg?dataset=${dataset}`;
 
@@ -209,8 +214,10 @@ class ImageWithRelateds extends Component {
               thumbnailHeight: 650,
               isSelected: false,
               customOverlay: <div style={{ opacity: 0}} id = {j}>
-                              <button className="left btn-success" style={{display:"inline-block"}} onClick = {this.positiveFeedback.bind(this,j)} >YES</button>
-                              <button className="right btn-danger" style={{display:"inline-block"}} onClick= {this.negativeFeedback.bind(this,j)} >NO</button>
+                              <button className="left btn-success" style={{display:"inline-block"}}
+                                onClick = {this.positiveFeedback.bind(this,j)} >YES</button>
+                              <button className="right btn-danger" style={{display:"inline-block"}}
+                                onClick= {this.negativeFeedback.bind(this,j)} >NO</button>
                             </div>
             }) :
              array.push({
@@ -348,7 +355,7 @@ class ImageWithRelateds extends Component {
                   showFullscreenButton={false}
                   showPlayButton={false}
                   showThumbnails={false}/>
-                  {/* <div className="text-portrait-slide">
+                  <div className="text-portrait-slide">
                       {this.renderAccuracy()}
                       {this.renderAnnotationsSent()}
                       <label className="first" >  Choose the mode you want to be in: </label>
@@ -369,7 +376,7 @@ class ImageWithRelateds extends Component {
                           <button className="button submit" type="button" onClick={this.submitAnnotations.bind((this))}>
                             Submit annotations</button> : null
                       }
-                  </div> */}
+                  </div>
               </div>
               <div className = "images-content" >
                 {((array.length< 1) || !(this.state.relatedImages.list && (this.state.relatedImages.list.length >0))) ?
@@ -422,41 +429,45 @@ class ImageWithRelateds extends Component {
       let similar_list = this.getSelectedImages();
       let dataset = this.state.relatedImages.dataset;
       let path =  null;
-      if(this.props.params.id == "instre_id"){
+
+      if(this.props.params.id  && parseInt(this.props.params.id)){
         path = this.props.location.query.path;
       }
+
+
       if(similar_list.positive || similar_list.negative ) {
         // MODE FEEDBACK
-        console.log(this.state.activeMode);
+        // console.log(this.state.activeMode);
         this.state.url ? this.props.send_Annotations(null, this.state.url , this.props.infoIMG , dataset, path, similar_list, this.state.activeMode)
              : this.props.send_Annotations(this.state.id, null , null, dataset, path, similar_list, this.state.activeMode);
 
         //TODO: esperar propietat de confirma de sent annotations i reload
         this.props.resetRanking();
-        // window.location.reload();
-
       } else {
         //MODE QE : COMENTO LO DE LA URL I FROM FILE
         this.props.sendFeedback_receiveRanking(this.state.id, null , null, dataset, path, similar_list, this.state.activeMode);
-        // window.location.reload();
         this.props.resetRanking();
 
       }
     }
 
     renderAccuracy(){
-      if(this.props.accuracy){
-        if(this.props.accuracy.initial > this.props.accuracy.final) {
+      if(this.state.accuracy){
+        if(this.state.accuracy.initial > this.state.accuracy.final) {
           return(<div className="alert alert-danger">
-                  <strong>Oh oh...</strong> Accuracy decreased from {this.props.accuracy.initial} to {this.props.accuracy.final}.
+                  <strong>Oh oh...</strong> Accuracy decreased from {this.state.accuracy.initial} to {this.state.accuracy.final}.
                 </div>);
-        } else if (this.props.accuracy.initial < this.props.accuracy.final){
+        } else if (this.state.accuracy.initial < this.state.accuracy.final){
           return(<div className="alert alert-success">
-                  <strong>Oh yes!</strong> Accuracy increased from {this.props.accuracy.initial} to {this.props.accuracy.final}.
+                  <strong>Oh yes!</strong> Accuracy increased from {this.state.accuracy.initial} to {this.state.accuracy.final}.
+                </div>);
+        } else if(this.state.accuracy.initial && (this.state.accuracy.initial == this.state.accuracy.final)){
+          return(<div className="alert alert-info">
+                  <strong>INFO</strong> Accuracy stayed the same: {this.state.accuracy.final}.
                 </div>);
         } else {
-          return(<div className="alert alert-info">
-                  <strong>INFO</strong> Accuracy stayed the same: {this.props.accuracy.final}.
+          return(<div className="alert alert-danger">
+                  <strong>ERROR</strong> No accuracy recived {this.state.accuracy.final}.
                 </div>);
         }
       }
