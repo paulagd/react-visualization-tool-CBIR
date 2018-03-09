@@ -108,6 +108,7 @@ class ImageWithRelateds extends Component {
       //display the 5000 images in order divided in pages containing 28 images (ItemsPerPage)
       let dataset = this.state.relatedImages.dataset;
       let array = [];
+
       this.state.relatedImages.list && this.state.relatedImages.list.length ? this.state.relatedImages.list.map((obj, j)=> {
         // if (dataset == "instre"){
         //   url = `${this.state.url_imgs.instre}?path=${obj.Image}.jpg `;
@@ -118,8 +119,11 @@ class ImageWithRelateds extends Component {
 
         if(obj.Image.indexOf("/") != -1){
           let id_aux = getIdFromPath(obj.Image, this.state.imlist);
-          url = this.state.url_imgs+ id_aux +`?dataset=${dataset}`;
+
+          url = this.state.url_imgs+ id_aux +`.jpg?dataset=${dataset}`;
+
         }
+
 
         array.push({
             url:url,
@@ -293,6 +297,7 @@ class ImageWithRelateds extends Component {
           onClickThumbnail = {this.onSelectImage.bind(this,array)}
           rowHeight = {260}
           margin = {10}
+          // tagStyle = {}
         />
       </div> :
       <div className = "annotations">
@@ -330,6 +335,7 @@ class ImageWithRelateds extends Component {
               : (this.state.images && this.state.images.length ? this.state.images :
                     (this.props.relatedImages && this.props.relatedImages.list &&
                       this.props.relatedImages.list.length ? this.display_Gallery_Images() : []));
+
 
         const n_pages =  Math.ceil(this.state.relatedImages && this.state.relatedImages.list ? this.state.relatedImages.list.length/ ItemsPerPage : 0 );
 
@@ -390,7 +396,7 @@ class ImageWithRelateds extends Component {
                       }
                   </div> */}
               </div>
-              {/* <div className = "images-content" >
+              <div className = "images-content" >
                 {((array.length< 1) || !(this.state.relatedImages.list && this.state.relatedImages.list.length)) ?
                   <Loader className="loader" color="green" size="20px" margin="0px"/> :
                   (  !(this.state.activeMode == 'e') ?
@@ -417,7 +423,7 @@ class ImageWithRelateds extends Component {
                       <ReactRpg imagesArray={array[this.state.activePage - 1]} columns={[1, 2, 4]} padding={10} />
                   </div>
                 )}
-              </div> */}
+              </div>
               <div className="footer-content">
 
                   <Pagination

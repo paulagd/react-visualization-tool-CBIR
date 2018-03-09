@@ -6,26 +6,59 @@ const ROOT_URL = 'http://localhost:5000';
 
 //GET SORTED RANKING OF ID IMAGE
 export function getRankinOfImage(id, url, encoded_image, dataset, path) {
+
+  return function(dispatch) {
+      axios.post(`${ROOT_URL}/getIimlist`, {dataset})
+      .then(req => {
+
+          if(parseInt(id)){
+            path = getPathfromId(id, req.data);
+            id = 'unknown_id';
+          } else{
+            id = id.replace(/.jpg$/,"");
+          }
+
+          axios.post(`${ROOT_URL}/getRankinById/${id}.json`, { dataset, url, encoded_image, path})
+          .then(request => {
+              dispatch({
+                  type: TYPES.GET_RANKIN_IMG,
+                  payload: {request, dataset}
+              });
+              dispatch({
+                  type: TYPES.GET_IMLIST,
+                  payload: req
+              });
+          });
+      }).catch((response) => {
+          dispatch(errorMessage(`${response} in action getRankinOfImage`));
+      });
+  };
+
+
     // const query = id ? `${ROOT_URL}/getRankinById/${id}.json` : `${ROOT_URL}/getRankinById/unknown_id`;
 
     // let path = null; //TODO: si quiere el path hacer la conversion getPathfromId
-    if(typeof(id)=='number'){
-      id = getPathfromId(id, this.state.imlist);
-      path = id;
-    }
-    id = id.replace(/.jpg$/,"");
 
-    return function(dispatch) {
-        axios.post(`${ROOT_URL}/getRankinById/${id}.json`, { dataset, url, encoded_image, path})
-        .then(request => {
-            dispatch({
-                type: TYPES.GET_RANKIN_IMG,
-                payload: {request, dataset}
-            });
-        }).catch((response) => {
-            dispatch(errorMessage(`${response} in action getRankinOfImage`));
-        });
-    };
+    //
+    // if(parseInt(id)){
+    //   id = getPathfromId(id, this.state.imlist);
+    //   path = id;
+    //   console.log('ID ACTION',id);
+    // }
+    // id = id.replace(/.jpg$/,"");
+
+    // return function(dispatch) {
+    //     axios.post(`${ROOT_URL}/getRankinById/${id}.json`, { dataset, url, encoded_image, path})
+    //     .then(request => {
+    //         dispatch({
+    //             type: TYPES.GET_RANKIN_IMG,
+    //             payload: {request, dataset}
+    //         });
+    //     }).catch((response) => {
+    //         console.log("response",response);
+    //         dispatch(errorMessage(`${response} in action getRankinOfImage`));
+    //     });
+    // };
 }
 
 export function getQimList(dataset) {
@@ -52,7 +85,7 @@ export function getImlist(dataset) {
                 payload: request
             });
         }).catch((response) => {
-            dispatch(errorMessage(`${response} in action getQimListDataset`));
+            dispatch(errorMessage(`${response} in action getImlist`));
         });
     };
 }
