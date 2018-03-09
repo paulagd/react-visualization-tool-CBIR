@@ -65,15 +65,14 @@ class ImageWithRelateds extends Component {
 
     callRankingAction(id) {
       let dataset = this.props.location.query.dataset;
-      let path =  null;
       let ide = id ? id : this.state.id;
 
-      if(ide == "instre_id"){
-        path = this.props.location.query.path;
-      }
+      // if(ide == "instre_id"){
+      //   path = this.props.location.query.path;
+      // }
 
-      this.state.url ? this.props.getRankinOfImage(null, this.state.url, this.props.infoIMG, dataset, path) :
-        this.props.getRankinOfImage(ide, null, null , dataset, path);
+      this.state.url ? this.props.getRankinOfImage(null, this.state.url, this.props.infoIMG, dataset) :
+        this.props.getRankinOfImage(ide, null, null , dataset);
 
       this.setState({activePage:1});
     }
@@ -103,47 +102,55 @@ class ImageWithRelateds extends Component {
 
     }
 
+// TODO : MODE Annotation and query expansion
     display_ReactRpg_Images() {
 
       //display the 5000 images in order divided in pages containing 28 images (ItemsPerPage)
       let dataset = this.state.relatedImages.dataset;
       let array = [];
 
-      this.state.relatedImages.list && this.state.relatedImages.list.length ? this.state.relatedImages.list.map((obj, j)=> {
+      this.state.relatedImages.list && this.state.relatedImages.list.length ? this.state.relatedImages.list.slice(1,4).map((obj, j)=> {
         // if (dataset == "instre"){
         //   url = `${this.state.url_imgs.instre}?path=${obj.Image}.jpg `;
         // }else{
         //   url = this.state.url_imgs[dataset] + obj.Image + '.jpg';
         // }
-        let url = this.state.url_imgs+ obj.Image +`.jpg?dataset=${dataset}`;
+        // let url = this.state.url_imgs+ obj.Image +`.jpg?dataset=${dataset}`;
+        //
+        // if(obj.Image.indexOf("/") != -1){
+        //   let id_aux = getIdFromPath(obj.Image, this.state.imlist);
+        //
+        //   url = this.state.url_imgs+ id_aux +`.jpg?dataset=${dataset}`;
+        //
+        // }
+
+        let url = "";
 
         if(obj.Image.indexOf("/") != -1){
           let id_aux = getIdFromPath(obj.Image, this.state.imlist);
-
-          url = this.state.url_imgs+ id_aux +`.jpg?dataset=${dataset}`;
-
+          url = this.state.url_imgs+ id_aux +`?dataset=${dataset}`;
+        }else{
+          let id_complete = (obj.Image.indexOf(".jpg") == -1) ? `${obj.Image}.jpg` : obj.Image;
+          url = this.state.url_imgs+ id_complete +`?dataset=${dataset}`;
         }
 
+        let img  = this.state.url ? this.state.url : url;
 
         array.push({
             url:url,
             clickHandler: (path) => {
                 if(this.state.activeMode == "e"){               //Explorer
-                  this.props.resetRanking();
 
-                  let url = `/images/${obj.Image}`;
-                  let path = null;
-                  if(this.state.relatedImages.dataset == "instre"){
-                    url = '/images/instre_id';
-                    path = obj.Image;
+                  this.props.resetRanking();
+                  let id = obj.Image;
+                  if(obj.Image.indexOf("/") != -1){
+                    id = getIdFromPath(obj.Image, this.state.imlist);
                   }
                   browserHistory.push({
-                    pathname: url,
-                    query: { dataset: this.state.relatedImages.dataset , path: path}
+                    pathname: `/images/${id}`,
+                    query: { dataset: this.state.relatedImages.dataset}
                   });
-                  this.callRankingAction(obj.Image);
-                  // this.setState({id:obj.Image});
-                  //IDEA: reload --> window.location.reload();
+                  this.callRankingAction(id);
                 }
               },
           });
@@ -203,12 +210,7 @@ class ImageWithRelateds extends Component {
       let dataset = this.state.relatedImages.dataset;
 
       this.state.relatedImages.list && this.state.relatedImages.list.length ? this.state.relatedImages.list.map((obj, j)=> {
-        // let url = "";
-        // if (dataset == "instre"){
-        //   url = `${this.state.url_imgs.instre}?path=${obj.Image}.jpg `;
-        // }else{
-        //   url = this.state.url_imgs[dataset] + obj.Image + '.jpg';
-        // }
+
         let url = this.state.url_imgs+ obj.Image +`.jpg?dataset=${dataset}`;
 
         if(obj.Image.indexOf("/") != -1){
@@ -220,7 +222,6 @@ class ImageWithRelateds extends Component {
           array.push({
               src:obj ? obj.Image : 'error',
               thumbnail: url,
-              //TODO: undo aquets 2
               isPositive: false,
               thumbnailWidth: 650,
               thumbnailHeight: 650,
@@ -236,7 +237,6 @@ class ImageWithRelateds extends Component {
                   thumbnailWidth: 650,
                   thumbnailHeight: 650,
                   isSelected: false,
-                  // thumbnailCaption: "ROSS WINS",
                 });
       }) : null;
       array = this.splitArray(array, ItemsPerPage);
@@ -340,30 +340,23 @@ class ImageWithRelateds extends Component {
         const n_pages =  Math.ceil(this.state.relatedImages && this.state.relatedImages.list ? this.state.relatedImages.list.length/ ItemsPerPage : 0 );
 
         //SET PROPERTIES MAIN IMAGE
-
-        let url = this.state.url_imgs+ this.state.id +`?dataset=${dataset}`;
+        let url = "";
 
         if(this.state.id.indexOf("/") != -1){
           let id_aux = getIdFromPath(this.state.id, this.state.imlist);
           url = this.state.url_imgs+ id_aux +`?dataset=${dataset}`;
+        }else{
+          let id_complete = (this.state.id.indexOf(".jpg") == -1) ? `${this.state.id}.jpg` : this.state.id;
+          url = this.state.url_imgs+ id_complete +`?dataset=${dataset}`;
         }
-        // TODO: unificar
-        // let url = `${this.state.url_imgs[dataset]}${this.state.id}.jpg`;
 
-        // if(dataset == "instre"){
-        //   url = `${this.state.url_imgs.instre}?path=${this.props.location.query.path} `;
-        //
-        //   if(this.props.location.query.path.substr(-4) != '.jpg'){
-        //     url = `${this.state.url_imgs.instre}?path=${this.props.location.query.path}.jpg `;
-        //   }
-        // }
-        const img  = this.state.url ? this.state.url : url;
+        let img  = this.state.url ? this.state.url : url;
+
         const image = [{
           original: img,
           originalClass: 'portrait-slide',
         }];
 
-        // console.log("IMAGEEEEEEN",img);
         return (
           <div className = "wrap-content" >
               <div className="top-content">
@@ -443,6 +436,7 @@ class ImageWithRelateds extends Component {
 
 
     submitAnnotations(){
+      // QUITAR EL PATH
       let similar_list = this.getSelectedImages();
       let dataset = this.state.relatedImages.dataset;
       let path =  null;

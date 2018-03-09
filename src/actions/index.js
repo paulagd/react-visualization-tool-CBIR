@@ -5,7 +5,8 @@ import { getPathfromId } from '../../utils/index';
 const ROOT_URL = 'http://localhost:5000';
 
 //GET SORTED RANKING OF ID IMAGE
-export function getRankinOfImage(id, url, encoded_image, dataset, path) {
+export function getRankinOfImage(id, url, encoded_image, dataset) {
+  let path = null;
 
   return function(dispatch) {
       axios.post(`${ROOT_URL}/getIimlist`, {dataset})
