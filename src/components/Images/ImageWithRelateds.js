@@ -67,10 +67,6 @@ class ImageWithRelateds extends Component {
       let dataset = this.props.location.query.dataset;
       let ide = id ? id : this.state.id;
 
-      // if(ide == "instre_id"){
-      //   path = this.props.location.query.path;
-      // }
-
       this.state.url ? this.props.getRankinOfImage(null, this.state.url, this.props.infoIMG, dataset) :
         this.props.getRankinOfImage(ide, null, null , dataset);
 
@@ -110,19 +106,6 @@ class ImageWithRelateds extends Component {
       let array = [];
 
       this.state.relatedImages.list && this.state.relatedImages.list.length ? this.state.relatedImages.list.slice(1,4).map((obj, j)=> {
-        // if (dataset == "instre"){
-        //   url = `${this.state.url_imgs.instre}?path=${obj.Image}.jpg `;
-        // }else{
-        //   url = this.state.url_imgs[dataset] + obj.Image + '.jpg';
-        // }
-        // let url = this.state.url_imgs+ obj.Image +`.jpg?dataset=${dataset}`;
-        //
-        // if(obj.Image.indexOf("/") != -1){
-        //   let id_aux = getIdFromPath(obj.Image, this.state.imlist);
-        //
-        //   url = this.state.url_imgs+ id_aux +`.jpg?dataset=${dataset}`;
-        //
-        // }
 
         let url = "";
 
@@ -136,10 +119,10 @@ class ImageWithRelateds extends Component {
 
         let img  = this.state.url ? this.state.url : url;
 
-        array.push({
+        array.push({                                           // MODE Explorer
             url:url,
             clickHandler: (path) => {
-                if(this.state.activeMode == "e"){               //Explorer
+                if(this.state.activeMode == "e"){
 
                   this.props.resetRanking();
                   let id = obj.Image;
@@ -158,8 +141,8 @@ class ImageWithRelateds extends Component {
       array = this.splitArray(array, ItemsPerPage);
       return array;
     }
-    positiveFeedback(i){
 
+    positiveFeedback(i){
       let index = i - (this.state.activePage - 1)*ItemsPerPage;
 
       let images = this.state.images;
@@ -183,7 +166,6 @@ class ImageWithRelateds extends Component {
     }
 
     onSelectThumbnail (images, index) {
-
         let img = images[this.state.activePage - 1][index];
 
           if(img.hasOwnProperty("isSelected")) {
@@ -205,6 +187,7 @@ class ImageWithRelateds extends Component {
     }
 
     display_Gallery_Images(mode) {
+
       //display the 5000 images in order divided in pages containing 28 images (ItemsPerPage)
       let array = [];
       let dataset = this.state.relatedImages.dataset;
@@ -516,7 +499,7 @@ class ImageWithRelateds extends Component {
 }
 
 function mapStateToProps(state) {
-  // console.log("statee",state);
+  console.log("statee",state.reducerRelatedImages);
   return { relatedImages: { list: state.reducerRelatedImages.getRankin.img_list, dataset: state.reducerRelatedImages.getRankin.dataset} ,
            accuracy: state.reducerRelatedImages.getRankin.accuracy ,
            infoIMG: state.reducerRelatedImages.img_info ,

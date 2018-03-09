@@ -90,18 +90,19 @@ class Home extends Component {
     });
   }
 
-// TODO: unificar
   onClickSlide(obj){
     this.props.resetRanking();
-    let url = `/images/${obj.image.replace(/.jpg$/,"")}`;
-    let path = null;
-    if(this.state.datasetChosed.name == "instre"){
-      url = '/images/instre_id';
-      path = obj.image;
+
+    let id = obj.image;
+    if(obj.image.indexOf("/") != -1){
+      id = getIdFromPath(obj.image, this.state.imlist);
+    } else {
+      id = id.replace(/.jpg$/,"");
     }
+
     browserHistory.push({
-      pathname: url,
-      query: { dataset: this.state.datasetChosed.name , path: path}
+      pathname: `/images/${id}`,
+      query: { dataset: this.state.datasetChosed.name}
     });
   }
 
