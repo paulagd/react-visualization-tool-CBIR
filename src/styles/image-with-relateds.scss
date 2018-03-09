@@ -37,7 +37,12 @@
 
               .image-gallery-image {
                 max-width: 350px;
-                max-width: 350px;
+                img {
+                  min-width: 350px;
+                  min-height: 250px;
+                  max-height: 500px;
+                  width: 80%;
+                }
 
               }
 
@@ -95,8 +100,19 @@
 
       .images-content {
           padding-top: 2%;
-          min-height: 100%;
           overflow: auto;
+
+          .loader {
+            padding-top: 2%;
+
+          }
+
+          .imagegrid {
+
+            .imageGridItem {
+              max-width: 25%;
+            }
+          }
 
           .annotations {
             div {

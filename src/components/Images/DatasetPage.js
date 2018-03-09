@@ -38,6 +38,9 @@ class DatasetPage extends Component {
 
   componentWillUnmount() {
     this.props.resetQimList();
+
+    // console.log("reset ranking in DatasetPage() component UNMOUNT");
+    // this.props.resetRanking();
   }
 
   componentWillReceiveProps(newProps) {
@@ -93,6 +96,8 @@ class DatasetPage extends Component {
           url: this.state.url_imgs + id +`?dataset=${this.state.title}`,
           clickHandler: (path) => {
               this.props.resetRanking();
+              console.log("reset ranking in clickHandler");
+
 
               // when clicked, it has to show the related images
               browserHistory.push({

@@ -55,7 +55,6 @@ class ImageWithRelateds extends Component {
               url: newProps.location.query && newProps.location.query.url ? newProps.location.query.url : null,
               relatedImages:{
                 list: newProps.relatedImages && newProps.relatedImages.list && newProps.relatedImages.list.length ? newProps.relatedImages.list : [],
-                // list: newProps.relatedImages && newProps.relatedImages.list && newProps.relatedImages.list.length ? this.display_Gallery_Images(mode) : []
                 dataset: newProps.relatedImages && newProps.relatedImages.dataset && newProps.relatedImages.dataset.length ? newProps.relatedImages.dataset : []
               },
               images :newProps.relatedImages && newProps.relatedImages.list && newProps.relatedImages.list.length ? this.display_ReactRpg_Images() : []
@@ -105,7 +104,7 @@ class ImageWithRelateds extends Component {
       let dataset = this.state.relatedImages.dataset;
       let array = [];
 
-      this.state.relatedImages.list && this.state.relatedImages.list.length ? this.state.relatedImages.list.slice(1,4).map((obj, j)=> {
+      this.state.relatedImages.list && this.state.relatedImages.list.length ? this.state.relatedImages.list.map((obj, j)=> {
 
         let url = "";
 
@@ -373,7 +372,7 @@ class ImageWithRelateds extends Component {
                   </div> */}
               </div>
               <div className = "images-content" >
-                {((array.length< 1) || !(this.state.relatedImages.list && this.state.relatedImages.list.length)) ?
+                {((array.length< 1) || !(this.state.relatedImages.list && (this.state.relatedImages.list.length >0))) ?
                   <Loader className="loader" color="green" size="20px" margin="0px"/> :
                   (  !(this.state.activeMode == 'e') ?
                       <div>
@@ -499,7 +498,6 @@ class ImageWithRelateds extends Component {
 }
 
 function mapStateToProps(state) {
-  console.log("statee",state.reducerRelatedImages);
   return { relatedImages: { list: state.reducerRelatedImages.getRankin.img_list, dataset: state.reducerRelatedImages.getRankin.dataset} ,
            accuracy: state.reducerRelatedImages.getRankin.accuracy ,
            infoIMG: state.reducerRelatedImages.img_info ,
@@ -508,6 +506,5 @@ function mapStateToProps(state) {
            imlist: state.reducerImages.imlist
          };
 }
-
 
 export default connect(mapStateToProps, { getRankinOfImage, getImlist, errorMessage, resetRanking, resetAnnotations, sendFeedback_receiveRanking, send_Annotations })(ImageWithRelateds);

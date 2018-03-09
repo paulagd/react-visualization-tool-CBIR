@@ -123,7 +123,6 @@ class Home extends Component {
         this.props.resetRanking();
         if (this.state.url) {
           // alert('A url was submitted: ' + this.state.url);
-          alert('FINE!!');
           browserHistory.push({
             pathname: '/images/unknown_id',
             query: { url: this.state.url , encoded_image:null, dataset: this.state.datasetChosed.name}

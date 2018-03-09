@@ -12,11 +12,13 @@ export function getRankinOfImage(id, url, encoded_image, dataset) {
       axios.post(`${ROOT_URL}/getIimlist`, {dataset})
       .then(req => {
 
-          if(parseInt(id)){
+          if(id  && parseInt(id)){
             path = getPathfromId(id, req.data);
             id = 'unknown_id';
-          } else{
+          } else if (id){
             id = id.replace(/.jpg$/,"");
+          } else {  // si es una url ?
+            id = 'unknown_id';
           }
 
           axios.post(`${ROOT_URL}/getRankinById/${id}.json`, { dataset, url, encoded_image, path})
