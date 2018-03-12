@@ -60,7 +60,7 @@ class ImageWithRelateds extends Component {
                 list: newProps.relatedImages && newProps.relatedImages.list && newProps.relatedImages.list.length ? newProps.relatedImages.list : [],
                 dataset: newProps.relatedImages && newProps.relatedImages.dataset && newProps.relatedImages.dataset.length ? newProps.relatedImages.dataset : []
               },
-              images :newProps.relatedImages && newProps.relatedImages.list && newProps.relatedImages.list.length ? this.display_ReactRpg_Images() : []
+              // images :newProps.relatedImages && newProps.relatedImages.list && newProps.relatedImages.list.length ? this.display_ReactRpg_Images() : []
             });
         }
     }
@@ -86,6 +86,7 @@ class ImageWithRelateds extends Component {
 
     handlePageChange(pageNumber) {
       this.setState({ activePage: pageNumber });
+      this.display_ReactRpg_Images();
     }
 
     handleOptionChange(mode){
@@ -108,39 +109,51 @@ class ImageWithRelateds extends Component {
       let dataset = this.state.relatedImages.dataset;
       let array = [];
 
-      this.state.relatedImages.list && this.state.relatedImages.list.length ? this.state.relatedImages.list.map((obj, j)=> {
+      let offset = (this.state.activePage-1) * ItemsPerPage;
 
-        let url = "";
+      if(this.state.relatedImages && this.state.relatedImages.list && this.state.relatedImages.list.length) {
 
-        if(obj.Image.indexOf("/") != -1){
-          let id_aux = getIdFromPath(obj.Image, this.state.imlist);
-          url = this.state.url_imgs+ id_aux +`?dataset=${dataset}`;
-        }else{
-          let id_complete = (obj.Image.indexOf(".jpg") == -1) ? `${obj.Image}.jpg` : obj.Image;
-          url = this.state.url_imgs+ id_complete +`?dataset=${dataset}`;
-        }
+        for (var j = offset; j < (offset+ItemsPerPage); j++) {
 
-        let img  = this.state.url ? this.state.url : url;
+          let obj = this.state.relatedImages.list[j];
+          let url = "";
 
-        array.push({                                           // MODE Explorer
-            url:url,
-            clickHandler: (path) => {
-                if(this.state.activeMode == "e"){
+          if(obj.Image.indexOf("/") != -1){
+            let id_aux = getIdFromPath(obj.Image, this.state.imlist);
+            url = this.state.url_imgs+ id_aux +`?dataset=${dataset}`;
+          }else{
+            let id_complete = (obj.Image.indexOf(".jpg") == -1) ? `${obj.Image}.jpg` : obj.Image;
+            url = this.state.url_imgs+ id_complete +`?dataset=${dataset}`;
+          }
 
-                  this.props.resetRanking();
-                  let id = obj.Image;
-                  if(obj.Image.indexOf("/") != -1){
-                    id = getIdFromPath(obj.Image, this.state.imlist);
+          let img  = this.state.url ? this.state.url : url;
+
+          array.push({                                           // MODE Explorer
+              url:url,
+              clickHandler: (path) => {
+                  if(this.state.activeMode == "e"){
+
+                    this.props.resetRanking();
+                    let id = obj.Image;
+                    if(obj.Image.indexOf("/") != -1){
+                      id = getIdFromPath(obj.Image, this.state.imlist);
+                    }
+                    browserHistory.push({
+                      pathname: `/images/${id}`,
+                      query: { dataset: this.state.relatedImages.dataset}
+                    });
+                    this.callRankingAction(id);
                   }
-                  browserHistory.push({
-                    pathname: `/images/${id}`,
-                    query: { dataset: this.state.relatedImages.dataset}
-                  });
-                  this.callRankingAction(id);
-                }
-              },
-          });
-      }) :  null;
+                },
+            });
+        }
+      }
+
+      // iteration_list.map((obj, j)=> {
+      //
+      //
+      // });
+
       array = this.splitArray(array, ItemsPerPage);
       return array;
     }
@@ -170,6 +183,7 @@ class ImageWithRelateds extends Component {
 
     onSelectThumbnail (images, index) {
         let img = images[this.state.activePage - 1][index];
+        // TODO: annotacio recursiva ?
 
           if(img.hasOwnProperty("isSelected")) {
             if(!img.isSelected) {
@@ -247,9 +261,9 @@ class ImageWithRelateds extends Component {
 
     getSelectedImages () {
       let selected = (this.state.activeMode == 'a') ? { positive:[], negative:[] } : [];
-      const n_pages =  Math.ceil(this.state.relatedImages && this.state.relatedImages.list ? this.state.relatedImages.list.length/ ItemsPerPage : 0 );
+      const n_pages =  Math.ceil(this.state.relatedImages && this.state.relatedImages.list
+        ? this.state.relatedImages.list.length/ ItemsPerPage : 0 );
       let images = this.state.images;
-      // let images = this.state.images[this.state.activePage - 1];
       if(images && images.length) {
          for(var j = 0; j < n_pages ; j++){
           for(var i = 0; i < images[j].length; i++){
@@ -291,12 +305,14 @@ class ImageWithRelateds extends Component {
       </div> :
       <div className = "annotations">
         <div className="alert alert-danger">
-          <strong>Danger!</strong> All the annotations will be saved to improve the system. To just experiment, use the query expansion mode.
+          <strong>Danger!</strong> All the annotations will be saved to improve the system.
+           To just experiment, use the query expansion mode.
         </div>
         <div style={{
             padding: "2px",
             color: "#666"
-          }}> Please, select an image and annotate if it is similar to thw query or not. When you finish, press SUBMIT : </div>
+          }}> Please, select an image and annotate if it is similar to thw query or not.
+           When you finish, press SUBMIT : </div>
           <Gallery
             images={array[this.state.activePage - 1]}
             onClickThumbnail = {this.onSelectThumbnail.bind(this,array)}
@@ -317,16 +333,22 @@ class ImageWithRelateds extends Component {
       if(dataset){
 
         // IDEA: SOMETIMES DOES NOT WORK --> FIXED THEORETICALLY
+        // let array = (this.state.activeMode == 'e') ?
+        //       (this.state.images && this.state.images.length ? this.state.images :
+        //             (this.props.relatedImages && this.props.relatedImages.list &&
+        //               this.props.relatedImages.list.length ? this.display_ReactRpg_Images() : []))
+        //       : (this.state.images && this.state.images.length ? this.state.images :
+        //             (this.props.relatedImages && this.props.relatedImages.list &&
+        //               this.props.relatedImages.list.length ? this.display_Gallery_Images() : []));
         let array = (this.state.activeMode == 'e') ?
               (this.state.images && this.state.images.length ? this.state.images :
-                    (this.props.relatedImages && this.props.relatedImages.list &&
-                      this.props.relatedImages.list.length ? this.display_ReactRpg_Images() : []))
+                    this.display_ReactRpg_Images())
               : (this.state.images && this.state.images.length ? this.state.images :
-                    (this.props.relatedImages && this.props.relatedImages.list &&
-                      this.props.relatedImages.list.length ? this.display_Gallery_Images() : []));
+                   this.display_Gallery_Images());
 
 
-        const n_pages =  Math.ceil(this.state.relatedImages && this.state.relatedImages.list ? this.state.relatedImages.list.length/ ItemsPerPage : 0 );
+        const n_pages =  Math.ceil(this.state.relatedImages && this.state.relatedImages.list
+           ? this.state.relatedImages.list.length/ ItemsPerPage : 0 );
 
         //SET PROPERTIES MAIN IMAGE
         let url = "";
@@ -346,6 +368,7 @@ class ImageWithRelateds extends Component {
           originalClass: 'portrait-slide',
         }];
 
+        console.log("array renderContent",array);
         return (
           <div className = "wrap-content" >
               <div className="top-content">
@@ -402,7 +425,7 @@ class ImageWithRelateds extends Component {
                             width: "100%",
                             border: "1px solid #ddd",
                             overflow: "auto"}}> </div>
-                      <ReactRpg imagesArray={array[this.state.activePage - 1]} columns={[1, 2, 4]} padding={10} />
+                      <ReactRpg imagesArray={array[0]} columns={[1, 2, 4]} padding={10} />
                   </div>
                 )}
               </div>
