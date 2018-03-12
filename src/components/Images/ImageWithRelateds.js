@@ -92,7 +92,7 @@ class ImageWithRelateds extends Component {
     }
 
     handleOptionChange(mode){
-      this.setState({ activeMode: mode });
+      this.setState({ activeMode: mode, imgsSelected: [] });
 
       if(!(mode == 'e')){
         this.setState({ accuracy:null ,images: this.state.relatedImages && this.state.relatedImages.list
@@ -285,7 +285,6 @@ class ImageWithRelateds extends Component {
           selected.positive.push(' '+images[i].src + '.jpg')
         }
       }
-
       return selected;
     }
 
@@ -294,13 +293,16 @@ class ImageWithRelateds extends Component {
       let images = this.state.images;
       const res = this.state.relatedImages.list[i];
       const index_imgs = (i-ItemsPerPage*(this.state.activePage-1));
+      let imgsSelected = this.state.imgsSelected;
 
       images[index_imgs].isPositive = true;
       images[index_imgs].idSelected = res.IdSequence;
       images[index_imgs].customOverlay.props.children[1].props.style.display = "none";
+      imgsSelected.push(images[index_imgs]);
 
       this.setState({
-          images: images
+          images,
+          imgsSelected
       });
     }
 
@@ -309,13 +311,16 @@ class ImageWithRelateds extends Component {
       let images = this.state.images;
       const res = this.state.relatedImages.list[i];
       const index_imgs = (i-ItemsPerPage*(this.state.activePage-1));
+      let imgsSelected = this.state.imgsSelected;
 
       images[index_imgs].isPositive = false;
       images[index_imgs].idSelected = res.IdSequence;
       images[index_imgs].customOverlay.props.children[0].props.style.display = "none";
-      
+      imgsSelected.push(images[index_imgs]);
+
       this.setState({
-          images: images
+          images,
+          imgsSelected
       });
     }
 
@@ -407,20 +412,21 @@ class ImageWithRelateds extends Component {
         path = this.props.location.query.path;
       }
 
-      if(similar_list.positive || similar_list.negative ) {
-        // MODE FEEDBACK
-        // console.log(this.state.activeMode);
-        this.state.url ? this.props.send_Annotations(null, this.state.url , this.props.infoIMG , dataset, path, similar_list, this.state.activeMode)
-             : this.props.send_Annotations(this.state.id, null , null, dataset, path, similar_list, this.state.activeMode);
-
-        //TODO: esperar propietat de confirma de sent annotations i reload
-        this.props.resetRanking();
-      } else {
-        //MODE QE : COMENTO LO DE LA URL I FROM FILE
-        this.props.sendFeedback_receiveRanking(this.state.id, null , null, dataset, path, similar_list, this.state.activeMode);
-        this.props.resetRanking();
-
-      }
+      console.log("similar_list",similar_list);
+      // if(similar_list.positive || similar_list.negative ) {
+      //   // MODE FEEDBACK
+      //   // console.log(this.state.activeMode);
+      //   this.state.url ? this.props.send_Annotations(null, this.state.url , this.props.infoIMG , dataset, path, similar_list, this.state.activeMode)
+      //        : this.props.send_Annotations(this.state.id, null , null, dataset, path, similar_list, this.state.activeMode);
+      //
+      //   //TODO: esperar propietat de confirma de sent annotations i reload
+      //   this.props.resetRanking();
+      // } else {
+      //   //MODE QE : COMENTO LO DE LA URL I FROM FILE
+      //   this.props.sendFeedback_receiveRanking(this.state.id, null , null, dataset, path, similar_list, this.state.activeMode);
+      //   this.props.resetRanking();
+      //
+      // }
     }
 
     renderContent() {
