@@ -8,6 +8,7 @@ import ImageGallery from 'react-image-gallery';
 import Gallery from 'react-grid-gallery';
 import Loader from 'halogen/FadeLoader';
 
+
 const ROOT_URL = 'http://localhost:5000';
 
 import { getIdFromPath, getPathfromId } from '../../../utils/index';
@@ -34,6 +35,7 @@ class ImageWithRelateds extends Component {
           activePage: 1,
           activeMode:"e",
           images : [],
+          imgsSelected: [],
           imlist: this.props.imlist ? this.props.imlist: [],
           accuracy: this.props.accuracy ? this.props.accuracy : null
           // images :this.props.relatedImages && this.props.relatedImages.list && this.props.relatedImages.list.length ? this.display_ReactRpg_Images() : []
@@ -78,29 +80,80 @@ class ImageWithRelateds extends Component {
     splitArray(arr, n) {
       let res = [];
       while (arr.length) {
-        res.push(arr.splice(0, n));
+        res = (arr.splice(0, n));
       }
-
       return res;
     }
 
     handlePageChange(pageNumber) {
       this.setState({ activePage: pageNumber });
       this.display_ReactRpg_Images();
+      this.display_Gallery_Images(this.state.activeMode, pageNumber);
     }
 
     handleOptionChange(mode){
-      this.setState({ activeMode: mode});
+      this.setState({ activeMode: mode });
 
       if(!(mode == 'e')){
         this.setState({ accuracy:null ,images: this.state.relatedImages && this.state.relatedImages.list
           && this.state.relatedImages.list.length ? this.display_Gallery_Images(mode) : []});
       } else {
-        this.setState({accuracy:null , images: this.state.relatedImages && this.state.relatedImages.list
+        this.setState({accuracy:null, images: this.state.relatedImages && this.state.relatedImages.list
           && this.state.relatedImages.list.length ? this.display_ReactRpg_Images() : []});
       }
       this.props.resetAnnotations();
 
+    }
+
+    display_Gallery_Images(mode, pageNumber) {
+
+      //display the 5000 images in order divided in pages containing 28 images (ItemsPerPage)
+      let array = [];
+      let dataset = this.state.relatedImages.dataset;
+      let page = pageNumber ? pageNumber : this.state.activePage;
+
+      let offset = (page-1) * ItemsPerPage;
+
+      if(this.state.relatedImages && this.state.relatedImages.list && this.state.relatedImages.list.length) {
+
+        for (var j = offset; j < (offset+ItemsPerPage); j++) {
+
+          let obj = this.state.relatedImages.list[j];
+          let url = this.state.url_imgs+ obj.Image +`.jpg?dataset=${dataset}`;
+
+          if(obj.Image.indexOf("/") != -1){
+            let id_aux = getIdFromPath(obj.Image, this.state.imlist);
+            url = this.state.url_imgs+ id_aux +`?dataset=${dataset}`;
+          }
+
+          (mode == 'a') ?
+            array.push({
+                src:obj ? obj.Image : 'error',
+                thumbnail: url,
+                isPositive: false,
+                thumbnailWidth: 650,
+                thumbnailHeight: 650,
+                isSelected: false,
+                customOverlay: <div style={{ opacity: 0}} id = {j}>
+                                <button className="left btn-success" style={{display:"inline-block"}}
+                                  onClick = {this.positiveFeedback.bind(this,j)} >YES</button>
+                                <button className="right btn-danger" style={{display:"inline-block"}}
+                                  onClick= {this.negativeFeedback.bind(this,j)} >NO</button>
+                              </div>
+              }) : array.push({
+                    src:obj.Image,
+                    thumbnail: url,
+                    thumbnailWidth: 650,
+                    thumbnailHeight: 650,
+                    isSelected: false,
+              });
+        }
+      }
+      array = this.splitArray(array, ItemsPerPage);
+      this.setState({images: this.state.relatedImages && this.state.relatedImages.list
+        && this.state.relatedImages.list.length ? array : []});
+
+      return array;
     }
 
     display_ReactRpg_Images() {
@@ -148,41 +201,12 @@ class ImageWithRelateds extends Component {
             });
         }
       }
-
-      // iteration_list.map((obj, j)=> {
-      //
-      //
-      // });
-
       array = this.splitArray(array, ItemsPerPage);
       return array;
     }
 
-    positiveFeedback(i){
-      let index = i - (this.state.activePage - 1)*ItemsPerPage;
-
-      let images = this.state.images;
-      images[this.state.activePage - 1][index].isPositive = true;
-      images[this.state.activePage - 1][index].customOverlay.props.children[1].props.style.display = "none";
-      this.setState({
-          images: images
-      });
-    }
-
-    negativeFeedback(i){
-      let index = i - (this.state.activePage - 1)*ItemsPerPage;
-
-      let images = this.state.images;
-      images[this.state.activePage - 1][index].isPositive = false;
-      images[this.state.activePage - 1][index].customOverlay.props.children[0].props.style.display = "none";
-      this.setState({
-          images: images
-      });
-
-    }
-
     onSelectThumbnail (images, index) {
-        let img = images[this.state.activePage - 1][index];
+        let img = images[index];
         // TODO: annotacio recursiva ?
 
           if(img.hasOwnProperty("isSelected")) {
@@ -203,85 +227,132 @@ class ImageWithRelateds extends Component {
           });
     }
 
-    display_Gallery_Images(mode) {
-
-      //display the 5000 images in order divided in pages containing 28 images (ItemsPerPage)
-      let array = [];
-      let dataset = this.state.relatedImages.dataset;
-
-      this.state.relatedImages.list && this.state.relatedImages.list.length ?
-        this.state.relatedImages.list.map((obj, j)=> {
-
-        let url = this.state.url_imgs+ obj.Image +`.jpg?dataset=${dataset}`;
-
-        if(obj.Image.indexOf("/") != -1){
-          let id_aux = getIdFromPath(obj.Image, this.state.imlist);
-          url = this.state.url_imgs+ id_aux +`?dataset=${dataset}`;
-        }
-
-        (mode == 'a') ?
-          array.push({
-              src:obj ? obj.Image : 'error',
-              thumbnail: url,
-              isPositive: false,
-              thumbnailWidth: 650,
-              thumbnailHeight: 650,
-              isSelected: false,
-              customOverlay: <div style={{ opacity: 0}} id = {j}>
-                              <button className="left btn-success" style={{display:"inline-block"}}
-                                onClick = {this.positiveFeedback.bind(this,j)} >YES</button>
-                              <button className="right btn-danger" style={{display:"inline-block"}}
-                                onClick= {this.negativeFeedback.bind(this,j)} >NO</button>
-                            </div>
-            }) :
-             array.push({
-                  src:obj.Image,
-                  thumbnail: url,
-                  thumbnailWidth: 650,
-                  thumbnailHeight: 650,
-                  isSelected: false,
-                });
-      }) : null;
-      array = this.splitArray(array, ItemsPerPage);
-      return array;
-    }
-
     onSelectImage (images, index) {
-        let img = images[this.state.activePage - 1][index];
 
-          if(img.hasOwnProperty("isSelected"))
-              img.isSelected = !img.isSelected;
-          else
-              img.isSelected = true;
+      let img = images[index];
+      let imgsSelected = this.state.imgsSelected;
 
-          this.setState({
-              images: images
-          });
+      const res = this.state.relatedImages.list.find((obj)=>{
+         if(obj.Image === img.src){
+           return obj;
+         }
+      });
+
+      if(img.hasOwnProperty("isSelected") && img.isSelected == true){
+        img.isSelected = !img.isSelected;
+        img.idSelected = null;
+        imgsSelected.push(img);
+      } else {
+        img.isSelected = true;
+        img.idSelected = res.IdSequence;
+        imgsSelected.push(img);
+      }
+
+      var hash = {};
+      imgsSelected = imgsSelected.filter(function(current) {
+
+        var exists = !hash[current.src] || false;
+        hash[current.src] = true;
+        return exists;
+      });
+
+      this.setState({
+          images: images,
+          imgsSelected
+      });
     }
 
     getSelectedImages () {
       let selected = (this.state.activeMode == 'a') ? { positive:[], negative:[] } : [];
       const n_pages =  Math.ceil(this.state.relatedImages && this.state.relatedImages.list
         ? this.state.relatedImages.list.length/ ItemsPerPage : 0 );
-      let images = this.state.images;
-      if(images && images.length) {
-         for(var j = 0; j < n_pages ; j++){
-          for(var i = 0; i < images[j].length; i++){
-            if(images[j][i].isSelected == true){
-              if(!(images[j][i].isPositive)){
-                //if the images are negative ( or nothing --> mode = q)
-                (this.state.activeMode == 'a') ?  selected.negative.push(' '+images[j][i].src + '.jpg')
-                : selected.push(' '+images[j][i].src + '.jpg');
-              } else {
-                //if the images are positive is because they are in mode a
-                selected.positive.push(' '+images[j][i].src + '.jpg')
-              }
-            }
-          }
+
+      let res = this.state.imgsSelected.map((obj)=>{
+         if(obj.isSelected){
+           return obj;
+         }
+      });
+
+      let images = res.filter(function(n){ return n != undefined });
+
+      for(var i=0; i<images.length; i++){
+        if(!(images[i].isPositive)){
+          //if the images are negative ( or nothing --> mode = q)
+          (this.state.activeMode == 'a') ?  selected.negative.push(' '+images[i].src + '.jpg')
+          : selected.push(' '+images[i].src + '.jpg');
+        } else {
+          //if the images are positive is because they are in mode 'a'
+          selected.positive.push(' '+images[i].src + '.jpg')
         }
       }
+
       return selected;
     }
+
+    positiveFeedback(i){
+
+      let images = this.state.images;
+      const res = this.state.relatedImages.list[i];
+      const index_imgs = (i-ItemsPerPage*(this.state.activePage-1));
+
+      images[index_imgs].isPositive = true;
+      images[index_imgs].idSelected = res.IdSequence;
+      images[index_imgs].customOverlay.props.children[1].props.style.display = "none";
+
+      this.setState({
+          images: images
+      });
+    }
+
+    negativeFeedback(i){
+
+      let images = this.state.images;
+      const res = this.state.relatedImages.list[i];
+      const index_imgs = (i-ItemsPerPage*(this.state.activePage-1));
+
+      images[index_imgs].isPositive = false;
+      images[index_imgs].idSelected = res.IdSequence;
+      images[index_imgs].customOverlay.props.children[0].props.style.display = "none";
+      
+      this.setState({
+          images: images
+      });
+    }
+
+    renderAccuracy(){
+      if(this.state.accuracy){
+        if(this.state.accuracy.initial > this.state.accuracy.final) {
+          return(<div className="alert alert-danger">
+                  <strong>Oh oh...</strong> Accuracy decreased from {this.state.accuracy.initial} to {this.state.accuracy.final}.
+                </div>);
+        } else if (this.state.accuracy.initial < this.state.accuracy.final){
+          return(<div className="alert alert-success">
+                  <strong>Oh yes!</strong> Accuracy increased from {this.state.accuracy.initial} to {this.state.accuracy.final}.
+                </div>);
+        } else if(this.state.accuracy.initial && (this.state.accuracy.initial == this.state.accuracy.final)){
+          return(<div className="alert alert-info">
+                  <strong>INFO</strong> Accuracy stayed the same: {this.state.accuracy.final}.
+                </div>);
+        } else {
+          return(<div className="alert alert-danger">
+                  <strong>ERROR</strong> No accuracy recived {this.state.accuracy.final}.
+                </div>);
+        }
+      }
+    }
+
+    renderAnnotationsSent(){
+      if (this.props.annotations_sent ==  true){
+        return(<div className="alert alert-success">
+                <strong>Thank you!</strong> Your annotations have been submited to improve the system.
+              </div>);
+      } else if (this.props.annotations_sent == false) {
+        return(<div className="alert alert-danger">
+                <strong>Oh oh...</strong> Something went wrong. Sorry, try again.
+              </div>);
+      }
+    }
+
 
     renderSentence(array){
       return (
@@ -293,8 +364,8 @@ class ImageWithRelateds extends Component {
         {this.getSelectedImages().toString()}
       </div>
         <Gallery
-          images={array[this.state.activePage - 1]}
-          onSelectImage = {this.onSelectImage.bind(this,array)}
+          images={array}
+          // onSelectImage = {this.onSelectImage.bind(this,array)}
           showLightboxThumbnails = {true}
           enableLightbox	= {false}
           onClickThumbnail = {this.onSelectImage.bind(this,array)}
@@ -314,7 +385,7 @@ class ImageWithRelateds extends Component {
           }}> Please, select an image and annotate if it is similar to thw query or not.
            When you finish, press SUBMIT : </div>
           <Gallery
-            images={array[this.state.activePage - 1]}
+            images={array}
             onClickThumbnail = {this.onSelectThumbnail.bind(this,array)}
             enableImageSelection = {true}
             showLightboxThumbnails = {true}
@@ -323,6 +394,33 @@ class ImageWithRelateds extends Component {
             margin = {10}
           />
       </div>);
+    }
+
+    submitAnnotations(){
+      // TODO: revisar
+      // QUITAR EL PATH
+      let similar_list = this.getSelectedImages();
+      let dataset = this.state.relatedImages.dataset;
+      let path =  null;
+
+      if(this.props.params.id  && parseInt(this.props.params.id)){
+        path = this.props.location.query.path;
+      }
+
+      if(similar_list.positive || similar_list.negative ) {
+        // MODE FEEDBACK
+        // console.log(this.state.activeMode);
+        this.state.url ? this.props.send_Annotations(null, this.state.url , this.props.infoIMG , dataset, path, similar_list, this.state.activeMode)
+             : this.props.send_Annotations(this.state.id, null , null, dataset, path, similar_list, this.state.activeMode);
+
+        //TODO: esperar propietat de confirma de sent annotations i reload
+        this.props.resetRanking();
+      } else {
+        //MODE QE : COMENTO LO DE LA URL I FROM FILE
+        this.props.sendFeedback_receiveRanking(this.state.id, null , null, dataset, path, similar_list, this.state.activeMode);
+        this.props.resetRanking();
+
+      }
     }
 
     renderContent() {
@@ -340,6 +438,7 @@ class ImageWithRelateds extends Component {
         //       : (this.state.images && this.state.images.length ? this.state.images :
         //             (this.props.relatedImages && this.props.relatedImages.list &&
         //               this.props.relatedImages.list.length ? this.display_Gallery_Images() : []));
+
         let array = (this.state.activeMode == 'e') ?
               (this.state.images && this.state.images.length ? this.state.images :
                     this.display_ReactRpg_Images())
@@ -368,7 +467,6 @@ class ImageWithRelateds extends Component {
           originalClass: 'portrait-slide',
         }];
 
-        console.log("array renderContent",array);
         return (
           <div className = "wrap-content" >
               <div className="top-content">
@@ -425,7 +523,7 @@ class ImageWithRelateds extends Component {
                             width: "100%",
                             border: "1px solid #ddd",
                             overflow: "auto"}}> </div>
-                      <ReactRpg imagesArray={array[0]} columns={[1, 2, 4]} padding={10} />
+                      <ReactRpg imagesArray={array} columns={[1, 2, 4]} padding={10} />
                   </div>
                 )}
               </div>
@@ -445,70 +543,6 @@ class ImageWithRelateds extends Component {
         console.log("NO DATASET");
       }
     }
-
-
-    submitAnnotations(){
-      // QUITAR EL PATH
-      let similar_list = this.getSelectedImages();
-      let dataset = this.state.relatedImages.dataset;
-      let path =  null;
-
-      if(this.props.params.id  && parseInt(this.props.params.id)){
-        path = this.props.location.query.path;
-      }
-
-
-      if(similar_list.positive || similar_list.negative ) {
-        // MODE FEEDBACK
-        // console.log(this.state.activeMode);
-        this.state.url ? this.props.send_Annotations(null, this.state.url , this.props.infoIMG , dataset, path, similar_list, this.state.activeMode)
-             : this.props.send_Annotations(this.state.id, null , null, dataset, path, similar_list, this.state.activeMode);
-
-        //TODO: esperar propietat de confirma de sent annotations i reload
-        this.props.resetRanking();
-      } else {
-        //MODE QE : COMENTO LO DE LA URL I FROM FILE
-        this.props.sendFeedback_receiveRanking(this.state.id, null , null, dataset, path, similar_list, this.state.activeMode);
-        this.props.resetRanking();
-
-      }
-    }
-
-    renderAccuracy(){
-      if(this.state.accuracy){
-        if(this.state.accuracy.initial > this.state.accuracy.final) {
-          return(<div className="alert alert-danger">
-                  <strong>Oh oh...</strong> Accuracy decreased from {this.state.accuracy.initial} to {this.state.accuracy.final}.
-                </div>);
-        } else if (this.state.accuracy.initial < this.state.accuracy.final){
-          return(<div className="alert alert-success">
-                  <strong>Oh yes!</strong> Accuracy increased from {this.state.accuracy.initial} to {this.state.accuracy.final}.
-                </div>);
-        } else if(this.state.accuracy.initial && (this.state.accuracy.initial == this.state.accuracy.final)){
-          return(<div className="alert alert-info">
-                  <strong>INFO</strong> Accuracy stayed the same: {this.state.accuracy.final}.
-                </div>);
-        } else {
-          return(<div className="alert alert-danger">
-                  <strong>ERROR</strong> No accuracy recived {this.state.accuracy.final}.
-                </div>);
-        }
-      }
-    }
-
-    renderAnnotationsSent(){
-
-      if (this.props.annotations_sent ==  true){
-        return(<div className="alert alert-success">
-                <strong>Thank you!</strong> Your annotations have been submited to improve the system.
-              </div>);
-      } else if (this.props.annotations_sent == false) {
-        return(<div className="alert alert-danger">
-                <strong>Oh oh...</strong> Something went wrong. Sorry, try again.
-              </div>);
-      }
-    }
-
 
 
     render() {
