@@ -53,6 +53,7 @@ class ImageWithRelateds extends Component {
            (JSON.stringify(this.props.imlist) !== JSON.stringify(newProps.imlist)) ||
            (JSON.stringify(this.props.accuracy) !== JSON.stringify(newProps.accuracy)) ||
            (JSON.stringify(this.props.location.query.url) !== JSON.stringify(newProps.location.query.url))) {
+
             this.setState({
               id: newProps.params.id,
               accuracy: newProps.accuracy ? newProps.accuracy : null,
@@ -62,7 +63,7 @@ class ImageWithRelateds extends Component {
                 list: newProps.relatedImages && newProps.relatedImages.list && newProps.relatedImages.list.length ? newProps.relatedImages.list : [],
                 dataset: newProps.relatedImages && newProps.relatedImages.dataset && newProps.relatedImages.dataset.length ? newProps.relatedImages.dataset : []
               },
-              // images :newProps.relatedImages && newProps.relatedImages.list && newProps.relatedImages.list.length ? this.display_ReactRpg_Images() : []
+              images :newProps.relatedImages && newProps.relatedImages.list && newProps.relatedImages.list.length ? this.display_ReactRpg_Images() : []
             });
         }
     }
@@ -70,7 +71,6 @@ class ImageWithRelateds extends Component {
     callRankingAction(id) {
       let dataset = this.props.location.query.dataset;
       let ide = id ? id : this.state.id;
-
       this.state.url ? this.props.getRankinOfImage(null, this.state.url, this.props.infoIMG, dataset) :
         this.props.getRankinOfImage(ide, null, null , dataset);
 
@@ -86,13 +86,13 @@ class ImageWithRelateds extends Component {
     }
 
     handlePageChange(pageNumber) {
-      this.setState({ activePage: pageNumber });
-      this.display_ReactRpg_Images();
-      this.display_Gallery_Images(this.state.activeMode, pageNumber);
+      this.setState({ activePage: pageNumber, images: [] });
+      (this.state.activeMode == 'e') ? this.display_ReactRpg_Images(pageNumber):
+          this.display_Gallery_Images(this.state.activeMode, pageNumber);
     }
 
     handleOptionChange(mode){
-      this.setState({ activeMode: mode, imgsSelected: [] });
+      this.setState({ activeMode: mode, imgsSelected: []});
 
       if(!(mode == 'e')){
         this.setState({ accuracy:null ,images: this.state.relatedImages && this.state.relatedImages.list
@@ -106,12 +106,10 @@ class ImageWithRelateds extends Component {
     }
 
     display_Gallery_Images(mode, pageNumber) {
-
       //display the 5000 images in order divided in pages containing 28 images (ItemsPerPage)
       let array = [];
       let dataset = this.state.relatedImages.dataset;
       let page = pageNumber ? pageNumber : this.state.activePage;
-
       let offset = (page-1) * ItemsPerPage;
 
       if(this.state.relatedImages && this.state.relatedImages.list && this.state.relatedImages.list.length) {
@@ -156,13 +154,12 @@ class ImageWithRelateds extends Component {
       return array;
     }
 
-    display_ReactRpg_Images() {
-
+    display_ReactRpg_Images(pageNumber) {
       //display the 5000 images in order divided in pages containing 28 images (ItemsPerPage)
       let dataset = this.state.relatedImages.dataset;
       let array = [];
-
-      let offset = (this.state.activePage-1) * ItemsPerPage;
+      let page = pageNumber ? pageNumber : this.state.activePage;
+      let offset = (page-1) * ItemsPerPage;
 
       if(this.state.relatedImages && this.state.relatedImages.list && this.state.relatedImages.list.length) {
 
@@ -178,9 +175,6 @@ class ImageWithRelateds extends Component {
             let id_complete = (obj.Image.indexOf(".jpg") == -1) ? `${obj.Image}.jpg` : obj.Image;
             url = this.state.url_imgs+ id_complete +`?dataset=${dataset}`;
           }
-
-          let img  = this.state.url ? this.state.url : url;
-
           array.push({                                           // MODE Explorer
               url:url,
               clickHandler: (path) => {
@@ -199,7 +193,7 @@ class ImageWithRelateds extends Component {
                   }
                 },
             });
-        }
+         }
       }
       array = this.splitArray(array, ItemsPerPage);
       return array;
@@ -430,29 +424,29 @@ class ImageWithRelateds extends Component {
     }
 
     renderContent() {
-
-      let dataset = this.state.relatedImages.dataset && this.state.relatedImages.dataset.length ?
+       let dataset = this.state.relatedImages.dataset && this.state.relatedImages.dataset.length ?
                     this.state.relatedImages.dataset.toLowerCase() : null;
-      dataset = dataset ? dataset : this.props.location.query.dataset;
-      if(dataset){
+       dataset = dataset ? dataset : this.props.location.query.dataset;
+       if(dataset){
 
         // IDEA: SOMETIMES DOES NOT WORK --> FIXED THEORETICALLY
-        // let array = (this.state.activeMode == 'e') ?
-        //       (this.state.images && this.state.images.length ? this.state.images :
-        //             (this.props.relatedImages && this.props.relatedImages.list &&
-        //               this.props.relatedImages.list.length ? this.display_ReactRpg_Images() : []))
-        //       : (this.state.images && this.state.images.length ? this.state.images :
-        //             (this.props.relatedImages && this.props.relatedImages.list &&
-        //               this.props.relatedImages.list.length ? this.display_Gallery_Images() : []));
+       // let array = (this.state.activeMode == 'e') ?
+       //      (this.state.images && this.state.images.length ? this.state.images :
+       //            (this.props.relatedImages && this.props.relatedImages.list &&
+       //              this.props.relatedImages.list.length ? this.display_ReactRpg_Images() : []))
+       //      : (this.state.images && this.state.images.length ? this.state.images :
+       //            (this.props.relatedImages && this.props.relatedImages.list &&
+       //              this.props.relatedImages.list.length ? this.display_Gallery_Images() : []));
 
-        let array = (this.state.activeMode == 'e') ?
+       // let array = (this.state.activeMode == 'e') ? this.display_ReactRpg_Images() :
+       //                this.display_Gallery_Images();
+       let array = (this.state.activeMode == 'e') ?
               (this.state.images && this.state.images.length ? this.state.images :
                     this.display_ReactRpg_Images())
               : (this.state.images && this.state.images.length ? this.state.images :
                    this.display_Gallery_Images());
 
-
-        const n_pages =  Math.ceil(this.state.relatedImages && this.state.relatedImages.list
+       const n_pages =  Math.ceil(this.state.relatedImages && this.state.relatedImages.list
            ? this.state.relatedImages.list.length/ ItemsPerPage : 0 );
 
         //SET PROPERTIES MAIN IMAGE
