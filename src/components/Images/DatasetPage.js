@@ -38,9 +38,6 @@ class DatasetPage extends Component {
 
   componentWillUnmount() {
     this.props.resetQimList();
-
-    // console.log("reset ranking in DatasetPage() component UNMOUNT");
-    // this.props.resetRanking();
   }
 
   componentWillReceiveProps(newProps) {
@@ -90,15 +87,14 @@ class DatasetPage extends Component {
       //IDEA: If it's instre we can't send the path. We need to change the id
       if(obj.image.indexOf("/") != -1){
         id = getIdFromPath(obj.image, this.state.imlist);
+      } else {
+        id =  id.split(".")[0];
       }
 
       array.push({
           url: this.state.url_imgs + id +`?dataset=${this.state.title}`,
           clickHandler: (path) => {
               this.props.resetRanking();
-              console.log("reset ranking in clickHandler");
-
-
               // when clicked, it has to show the related images
               browserHistory.push({
                 pathname: `/images/${id}`,

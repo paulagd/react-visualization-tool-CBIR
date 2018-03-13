@@ -132,7 +132,7 @@ class ImageWithRelateds extends Component {
                 thumbnailWidth: 650,
                 thumbnailHeight: 650,
                 isSelected: false,
-                customOverlay: <div style={{ opacity: 0}} id = {j}>
+                customOverlay: <div id = {j} style={{ opacity: '0' }}>
                                 <button className="left btn-success" style={{display:"inline-block"}}
                                   onClick = {this.positiveFeedback.bind(this,j)} >YES</button>
                                 <button className="right btn-danger" style={{display:"inline-block"}}
@@ -145,8 +145,9 @@ class ImageWithRelateds extends Component {
                     thumbnailHeight: 650,
                     isSelected: false,
               });
-        }
+         }
       }
+
       array = this.splitArray(array, ItemsPerPage);
       this.setState({images: this.state.relatedImages && this.state.relatedImages.list
         && this.state.relatedImages.list.length ? array : []});
@@ -566,6 +567,7 @@ class ImageWithRelateds extends Component {
 }
 
 function mapStateToProps(state) {
+  // console.log('statee',state.reducerRelatedImages.getRankin.img_list);
   return { relatedImages: { list: state.reducerRelatedImages.getRankin.img_list, dataset: state.reducerRelatedImages.getRankin.dataset} ,
            accuracy: state.reducerRelatedImages.getRankin.accuracy ,
            infoIMG: state.reducerRelatedImages.img_info ,
