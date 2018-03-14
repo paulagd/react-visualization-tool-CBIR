@@ -35,12 +35,10 @@ export default function(state = INITIAL_STATE, action) {
       });
 
     case TYPES.RESET_ANNOTATIONS:
-    // console.log({getRankin: {img_list: action.payload.request.data, dataset:action.payload.dataset}});
       return Object.assign({}, state, {
         confirm: null
       });
     case TYPES.RESET_RANKIN_IMG:
-    // console.log({getRankin: {img_list: action.payload.request.data, dataset:action.payload.dataset}});
       return Object.assign({}, state, {
         getRankin: {
           img_list: null,

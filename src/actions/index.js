@@ -21,8 +21,6 @@ export function getRankinOfImage(id, url, encoded_image, dataset) {
             id = 'unknown_id';
           }
 
-          console.log('id ACTION',id);
-
           axios.post(`${ROOT_URL}/getRankinById/${id}.json`, { dataset, url, encoded_image, path})
           .then(request => {
               dispatch({
@@ -65,6 +63,24 @@ export function getRankinOfImage(id, url, encoded_image, dataset) {
     //     });
     // };
 }
+
+// export function isLoadingList() {
+//
+//   return function(dispatch) {
+//         dispatch({
+//             type: TYPES.IS_LOADING_LIST
+//         });
+//   };
+// }
+//
+// export function resetLoadingList() {
+//
+//   return function(dispatch) {
+//         dispatch({
+//             type: TYPES.RESET_LOADING_LIST
+//         });
+//   };
+// }
 
 export function getQimList(dataset) {
 

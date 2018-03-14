@@ -11,3 +11,5 @@ export const RESET_ANNOTATIONS = 'RESET_ANNOTATIONS';
 // export const GET_ID_FROM_PATH = 'GET_ID_FROM_PATH';
 // export const GET_PATH_FROM_ID = 'GET_PATH_FROM_ID';
 export const GET_IMLIST = 'GET_IMLIST';
+export const IS_LOADING_LIST = 'IS_LOADING_LIST';
+export const RESET_LOADING_LIST = 'RESET_LOADING_LIST';

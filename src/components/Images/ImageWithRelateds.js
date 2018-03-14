@@ -6,7 +6,7 @@ import { Link, browserHistory } from 'react-router';
 import NotFound from '../../common/NotFound';
 import ImageGallery from 'react-image-gallery';
 import Gallery from 'react-grid-gallery';
-import Loader from 'halogen/FadeLoader';
+import PopUpLoader from '../../common/PopUpLoader';
 
 
 const ROOT_URL = 'http://localhost:5000';
@@ -37,9 +37,10 @@ class ImageWithRelateds extends Component {
           images : [],
           imgsSelected: [],
           imlist: this.props.imlist ? this.props.imlist: [],
-          accuracy: this.props.accuracy ? this.props.accuracy : null
+          accuracy: this.props.accuracy ? this.props.accuracy : null,
           // images :this.props.relatedImages && this.props.relatedImages.list && this.props.relatedImages.list.length ? this.display_ReactRpg_Images() : []
         };
+        isLoading:false;
     }
     componentDidMount() {
       this.props.getImlist('instre');
@@ -353,7 +354,6 @@ class ImageWithRelateds extends Component {
       }
     }
 
-
     renderSentence(array){
       return (
         this.state.activeMode == 'q' ? <div>
@@ -439,8 +439,6 @@ class ImageWithRelateds extends Component {
        //            (this.props.relatedImages && this.props.relatedImages.list &&
        //              this.props.relatedImages.list.length ? this.display_Gallery_Images() : []));
 
-       // let array = (this.state.activeMode == 'e') ? this.display_ReactRpg_Images() :
-       //                this.display_Gallery_Images();
        let array = (this.state.activeMode == 'e') ?
               (this.state.images && this.state.images.length ? this.state.images :
                     this.display_ReactRpg_Images())
@@ -502,9 +500,13 @@ class ImageWithRelateds extends Component {
               </div>
               <div className = "images-content" >
                 {((array.length< 1) || !(this.state.relatedImages.list && (this.state.relatedImages.list.length >0))) ?
-                  <Loader className="loader" color="green" size="20px" margin="0px"/> :
-                  (  !(this.state.activeMode == 'e') ?
+                  ( <div>
+                      { this.loading(true) }
+                  </div>
+                  ):(
+                    !(this.state.activeMode == 'e') ?
                       <div>
+                          {this.loading(false)}
                           {this.renderSentence(array)}
                           <div style={{
                               display: "block",
@@ -514,6 +516,7 @@ class ImageWithRelateds extends Component {
                               overflow: "auto"}} />
                     </div> :
                     <div>
+                        {this.loading(false)}
                         <div style={{
                             padding: "2px",
                             color: "#666"
@@ -529,7 +532,6 @@ class ImageWithRelateds extends Component {
                 )}
               </div>
               <div className="footer-content">
-
                   <Pagination
                    activePage={this.state.activePage}
                    itemsCountPerPage={ItemsPerPage}
@@ -545,6 +547,13 @@ class ImageWithRelateds extends Component {
       }
     }
 
+    loading(isLoading) {
+        this.isLoading = isLoading;
+    }
+
+    renderPopUp(){
+      return (<PopUpLoader title = "Wait until is loaded, please." />);
+    }
 
     render() {
       const { messageError } = this.props;
@@ -554,11 +563,12 @@ class ImageWithRelateds extends Component {
                 </div>);
       } else {
           return (
-            <div className="content-image-related">
+            <div className="content-image-related" >
               <h3>
                 IMAGES SIMILARS TO {this.state.id.toUpperCase()}.JPG
               </h3>
               {this.renderContent()}
+              {this.isLoading ? this.renderPopUp() : null}
             </div>
           );
       }
@@ -567,7 +577,6 @@ class ImageWithRelateds extends Component {
 }
 
 function mapStateToProps(state) {
-  // console.log('statee',state.reducerRelatedImages.getRankin.img_list);
   return { relatedImages: { list: state.reducerRelatedImages.getRankin.img_list, dataset: state.reducerRelatedImages.getRankin.dataset} ,
            accuracy: state.reducerRelatedImages.getRankin.accuracy ,
            infoIMG: state.reducerRelatedImages.img_info ,

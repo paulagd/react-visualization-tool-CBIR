@@ -1,4 +1,4 @@
-import React from 'react';
+import React , {Component} from 'react';
 import ReactDOM from 'react-dom';
 import { Route, IndexRoute, browserHistory, Link } from 'react-router';
 
@@ -11,7 +11,7 @@ import DatasetPage from './components/Images/DatasetPage';
 import ImageWithRelateds from './components/Images/ImageWithRelateds';
 
 import { options_NavBar } from './customize.js';
-import { getQimList, resetQimList} from './actions/index';
+import { getQimList, resetQimList } from './actions/index';
 
 const Test = ()=>{
   return(<h2 style={{"paddingLeft":"35%"}} >W E L C O M E !</h2>)
@@ -30,11 +30,12 @@ export default (
                 Store.dispatch(resetQimList());
                 Store.dispatch(getQimList('paris'));
              }} />
-          <Route path="instre" component={DatasetPage} onEnter={()=>{
+          <Route path="instre" component={DatasetPage} onEnter={(e)=>{
+
                 Store.dispatch(resetQimList());
                 Store.dispatch(getQimList('instre'));
              }} />
-          <Route path=":id" component={ImageWithRelateds} />
+          <Route path=":id" component={ImageWithRelateds}  />
         </Route>
 
         <Route path="*" component={NotFound} />

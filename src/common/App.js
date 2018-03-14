@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { IndexLink } from 'react-router';
+
+// import { isLoadingList } from '../actions/index';
 
 import '../styles/app.scss';
 
@@ -45,13 +48,27 @@ class App extends Component {
     }
   }
 
+  checkLoadingState(e){
+      // console.log(' esta loading?? ',this.props.isLoading);
+
+    if (this.props.isLoading)
+      e.preventDefault()
+    else
+      this.props.isLoadingList();
+  }
+
   returnOptions(opt,i){
-    return(<li className="nav-item" key={`key-${i}`}>
-      <IndexLink to={opt.link} className="nav-link active" href="#">{opt.name}</IndexLink>
+
+    return(<li className="nav-item" key={`key-${i}`} >
+      <IndexLink to={opt.link} className="nav-link active"
+        // onClick = {this.checkLoadingState.bind(this)}
+        href="#">{opt.name}</IndexLink>
     </li>);
   }
 
   render() {
+    // console.log('esta loading?? ',this.props.isLoading);
+
     return (
       <div className="main-app-page">
         <nav className="navbar navbar-default color-navbar fixed">
@@ -66,5 +83,13 @@ class App extends Component {
     );
   }
 }
+//
+// export function mapStateToProps(state){
+//     return {
+//         isLoading: state.reducerRelatedImages.isLoadingList
+//     };
+// }
+//
+// export default connect(mapStateToProps, { isLoadingList })(App);
 
 export default App;

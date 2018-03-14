@@ -1,0 +1,37 @@
+.full-container {
+    &.white{
+      background-color:transparent !important;
+    }
+  	background-color: rgba(250, 250, 250, .9);
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+
+    .popup-body {
+      	width: 444px;
+      	height: 200px;
+        background-color: rgba(250, 250, 250, .6);
+        background-color: white;
+      	border-radius: 2px;
+      	border: solid 1px #b9b9b9;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        .text-container {
+            display: block;
+            height: 130px;
+            line-height: 130px;
+            text-align: center;
+            // @extend .select-text;
+        }
+
+        .loader-container {
+            margin-left: 48%;
+        }
+    }
+}
