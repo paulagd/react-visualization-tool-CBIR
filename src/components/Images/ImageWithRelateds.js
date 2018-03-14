@@ -152,8 +152,8 @@ class ImageWithRelateds extends Component {
 
       array = this.splitArray(array, ItemsPerPage);
       // IDEA
-      this.setState({images: this.state.relatedImages && this.state.relatedImages.list
-        && this.state.relatedImages.list.length ? array : []});
+      // this.setState({images: this.state.relatedImages && this.state.relatedImages.list
+      //   && this.state.relatedImages.list.length ? array : []});
 
       return array;
     }
@@ -338,7 +338,7 @@ class ImageWithRelateds extends Component {
                 </div>);
         } else {
           return(<div className="alert alert-danger">
-                  <strong>ERROR</strong> No accuracy recived {this.state.accuracy.final}.
+                  <strong>ERROR</strong> No accuracy recived .
                 </div>);
         }
       }
@@ -410,20 +410,20 @@ class ImageWithRelateds extends Component {
       }
 
       console.log("similar_list",similar_list);
-      // if(similar_list.positive || similar_list.negative ) {
-      //   // MODE FEEDBACK
-      //   // console.log(this.state.activeMode);
-      //   this.state.url ? this.props.send_Annotations(null, this.state.url , this.props.infoIMG , dataset, path, similar_list, this.state.activeMode)
-      //        : this.props.send_Annotations(this.state.id, null , null, dataset, path, similar_list, this.state.activeMode);
-      //
-      //   //TODO: esperar propietat de confirma de sent annotations i reload
-      //   this.props.resetRanking();
-      // } else {
-      //   //MODE QE : COMENTO LO DE LA URL I FROM FILE
+      if(similar_list.positive || similar_list.negative ) {
+        // MODE FEEDBACK
+        console.log(this.state.activeMode);
+        this.state.url ? this.props.send_Annotations(null, this.state.url , this.props.infoIMG , dataset, path, similar_list, this.state.activeMode)
+             : this.props.send_Annotations(this.state.id, null , null, dataset, path, similar_list, this.state.activeMode);
+
+        //TODO: esperar propietat de confirma de sent annotations i reload
+        this.props.resetRanking();
+      } else {
+        //MODE QE : COMENTO LO DE LA URL I FROM FILE
         this.props.sendFeedback_receiveRanking(this.state.id, null , null, dataset, path, similar_list, this.state.activeMode);
         this.props.resetRanking();
-      //
-      // }
+
+      }
     }
 
     renderContent() {
