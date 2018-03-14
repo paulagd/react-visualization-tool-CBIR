@@ -38,7 +38,7 @@ class ImageWithRelateds extends Component {
           imgsSelected: [],
           imlist: this.props.imlist ? this.props.imlist: [],
           accuracy: this.props.accuracy ? this.props.accuracy : null,
-          // images :this.props.relatedImages && this.props.relatedImages.list && this.props.relatedImages.list.length ? this.display_ReactRpg_Images() : []
+          images :this.props.relatedImages && this.props.relatedImages.list && this.props.relatedImages.list.length ? this.display_ReactRpg_Images() : []
         };
         isLoading:false;
     }
@@ -64,6 +64,7 @@ class ImageWithRelateds extends Component {
                 list: newProps.relatedImages && newProps.relatedImages.list && newProps.relatedImages.list.length ? newProps.relatedImages.list : [],
                 dataset: newProps.relatedImages && newProps.relatedImages.dataset && newProps.relatedImages.dataset.length ? newProps.relatedImages.dataset : []
               },
+
               images :newProps.relatedImages && newProps.relatedImages.list && newProps.relatedImages.list.length ? this.display_ReactRpg_Images() : []
             });
         }
@@ -150,6 +151,7 @@ class ImageWithRelateds extends Component {
       }
 
       array = this.splitArray(array, ItemsPerPage);
+      // IDEA
       this.setState({images: this.state.relatedImages && this.state.relatedImages.list
         && this.state.relatedImages.list.length ? array : []});
 
@@ -418,8 +420,8 @@ class ImageWithRelateds extends Component {
       //   this.props.resetRanking();
       // } else {
       //   //MODE QE : COMENTO LO DE LA URL I FROM FILE
-      //   this.props.sendFeedback_receiveRanking(this.state.id, null , null, dataset, path, similar_list, this.state.activeMode);
-      //   this.props.resetRanking();
+        this.props.sendFeedback_receiveRanking(this.state.id, null , null, dataset, path, similar_list, this.state.activeMode);
+        this.props.resetRanking();
       //
       // }
     }
@@ -431,19 +433,19 @@ class ImageWithRelateds extends Component {
        if(dataset){
 
         // IDEA: SOMETIMES DOES NOT WORK --> FIXED THEORETICALLY
-       // let array = (this.state.activeMode == 'e') ?
-       //      (this.state.images && this.state.images.length ? this.state.images :
-       //            (this.props.relatedImages && this.props.relatedImages.list &&
-       //              this.props.relatedImages.list.length ? this.display_ReactRpg_Images() : []))
-       //      : (this.state.images && this.state.images.length ? this.state.images :
-       //            (this.props.relatedImages && this.props.relatedImages.list &&
-       //              this.props.relatedImages.list.length ? this.display_Gallery_Images() : []));
-
        let array = (this.state.activeMode == 'e') ?
-              (this.state.images && this.state.images.length ? this.state.images :
-                    this.display_ReactRpg_Images())
-              : (this.state.images && this.state.images.length ? this.state.images :
-                   this.display_Gallery_Images());
+            (this.state.images && this.state.images.length ? this.state.images :
+                  (this.props.relatedImages && this.props.relatedImages.list &&
+                    this.props.relatedImages.list.length ? this.display_ReactRpg_Images() : []))
+            : (this.state.images && this.state.images.length ? this.state.images :
+                  (this.props.relatedImages && this.props.relatedImages.list &&
+                    this.props.relatedImages.list.length ? this.display_Gallery_Images() : []));
+
+       // let array = (this.state.activeMode == 'e') ?
+       //        (this.state.images && this.state.images.length ? this.state.images :
+       //              this.display_ReactRpg_Images())
+       //        : (this.state.images && this.state.images.length ? this.state.images :
+       //             this.display_Gallery_Images());
 
        const n_pages =  Math.ceil(this.state.relatedImages && this.state.relatedImages.list
            ? this.state.relatedImages.list.length/ ItemsPerPage : 0 );
@@ -552,7 +554,7 @@ class ImageWithRelateds extends Component {
     }
 
     renderPopUp(){
-      return (<PopUpLoader title = "Wait until is loaded, please." />);
+      return (<PopUpLoader title = "Please, wait until the images are loaded." />);
     }
 
     render() {
