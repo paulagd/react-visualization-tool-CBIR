@@ -3,10 +3,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Pagination from 'react-js-pagination';
 import { Link, browserHistory } from 'react-router';
-import NotFound from '../../common/NotFound';
+import NotFound from '../common/NotFound';
 import ImageGallery from 'react-image-gallery';
 import Gallery from 'react-grid-gallery';
-import PopUpLoader from '../../common/PopUpLoader';
+import PopUpLoader from '../common/PopUpLoader';
 
 
 const ROOT_URL = 'http://localhost:5000';

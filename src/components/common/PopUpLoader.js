@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Loader from 'halogen/FadeLoader';
 
-import '../styles/PopUpLoader.scss';
+import '../../styles/PopUpLoader.scss';
 
 
 class PopUpLoader extends Component {

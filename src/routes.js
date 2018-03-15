@@ -2,8 +2,8 @@ import React , {Component} from 'react';
 import ReactDOM from 'react-dom';
 import { Route, IndexRoute, browserHistory, Link } from 'react-router';
 
-import App from './common/App';
-import NotFound from './common/NotFound';
+import App from './components/common/App';
+import NotFound from './components/common/NotFound';
 import Store from './store';
 import Home from './components/Home';
 

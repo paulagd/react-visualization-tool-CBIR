@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { IndexLink } from 'react-router';
 
-// import { isLoadingList } from '../actions/index';
-
-import '../styles/app.scss';
+import '../../styles/app.scss';
 
 class App extends Component {
 

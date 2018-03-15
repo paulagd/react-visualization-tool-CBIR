@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import '../styles/not-found.scss';
+import '../../styles/not-found.scss';
 
   class NotFound extends Component {
 
