@@ -14,7 +14,7 @@ const ROOT_URL = 'http://localhost:5000';
 import { getIdFromPath, getPathfromId } from '../../../utils/index';
 
 import { getRankinOfImage ,getImlist, errorMessage, resetAnnotations, resetRanking,
-  sendFeedback_receiveRanking, send_Annotations } from '../../actions/index';
+  sendFeedback_QE, send_Annotations } from '../../actions/index';
 
 import '../../styles/image-with-relateds.scss';
 
@@ -412,7 +412,6 @@ class ImageWithRelateds extends Component {
       console.log("similar_list",similar_list);
       if(similar_list.positive || similar_list.negative ) {
         // MODE FEEDBACK
-        console.log(this.state.activeMode);
         this.state.url ? this.props.send_Annotations(null, this.state.url , this.props.infoIMG , dataset, path, similar_list, this.state.activeMode)
              : this.props.send_Annotations(this.state.id, null , null, dataset, path, similar_list, this.state.activeMode);
 
@@ -420,7 +419,7 @@ class ImageWithRelateds extends Component {
         this.props.resetRanking();
       } else {
         //MODE QE : COMENTO LO DE LA URL I FROM FILE
-        this.props.sendFeedback_receiveRanking(this.state.id, null , null, dataset, path, similar_list, this.state.activeMode);
+        this.props.sendFeedback_QE(this.state.id, null , null, dataset, path, similar_list, this.state.activeMode);
         this.props.resetRanking();
 
       }
@@ -588,4 +587,4 @@ function mapStateToProps(state) {
          };
 }
 
-export default connect(mapStateToProps, { getRankinOfImage, getImlist, errorMessage, resetRanking, resetAnnotations, sendFeedback_receiveRanking, send_Annotations })(ImageWithRelateds);
+export default connect(mapStateToProps, { getRankinOfImage, getImlist, errorMessage, resetRanking, resetAnnotations, sendFeedback_QE, send_Annotations })(ImageWithRelateds);

@@ -22,19 +22,12 @@ export default (
         <IndexRoute components={Test}/>
         <Route path="/home" component={Home} />
         <Route path="images" >
-          <Route path="oxford" component={DatasetPage} onEnter={()=>{
-                Store.dispatch(resetQimList());
-                Store.dispatch(getQimList('oxford'));
-             }} />
-          <Route path="paris" component={DatasetPage} onEnter={()=>{
-                Store.dispatch(resetQimList());
-                Store.dispatch(getQimList('paris'));
-             }} />
-          <Route path="instre" component={DatasetPage} onEnter={(e)=>{
-
-                Store.dispatch(resetQimList());
-                Store.dispatch(getQimList('instre'));
-             }} />
+          {options_NavBar.map((opt,i)=>{
+            return(<Route key={`key-router-${i}`} path={opt.name.toLowerCase()} component={DatasetPage} onEnter={()=>{
+                  Store.dispatch(resetQimList());
+                  Store.dispatch(getQimList(opt.name.toLowerCase()));
+               }} />);
+          })}
           <Route path=":id" component={ImageWithRelateds}  />
         </Route>
 

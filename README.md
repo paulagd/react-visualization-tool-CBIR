@@ -26,16 +26,20 @@ Usage
 ## Project Structure
 
 ```
-|---src # Components live here
+|---node_modules # Contains all the dependences of the project
+|---documentation # Contains the documentation of the project
 |-------actions
 |-----------index.js
 |-----------types.js
 |-------components
-|-----------Welcome.js
-|-----------
-|-------common
-|-----------App.js
-|-----------NotFound.js
+|-----------Home.js
+|-----------Images
+|---------------DatasetPage.js
+|---------------ImageWithRelateds.js
+|-----------common
+|---------------App.js
+|---------------NotFound.js
+|---------------PopUpLoader.js
 |-------reducers
 |-----------index.js
 |-----------reducer-error-message.js
@@ -45,6 +49,7 @@ Usage
 |-------index.js # Build entry
 |-------routes.js # Build routes
 |-------customize.js # File to customize the system
+|-------store.js # File containing the store
 |---.babelrc # Babel config file
 |---.gitignore # Files to ignore
 |---index.html
@@ -53,10 +58,18 @@ Usage
 
 ```
 
+## Documentation
 
-## CUSTOMIZATION
+Install apidoc
+```
+npm install -g apidoc
 
-### Datasets
+```
 
-* In the 'customize.js' file, it is specified how to introduce different dataset.
-* The navegation bar will be modified following the datasets specified.
+Run documentation generation script:
+```
+npm run doc
+
+```
+
+Open the file 'index.html' stored in the folder 'documentation'.

@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { Link, browserHistory } from 'react-router';
 import Slider from 'react-slick';
 
+import { options_NavBar } from '../customize.js';
 import { getIdFromPath } from '../../utils/index';
 
 import { postEncodedInfo, getQimList, resetRanking, resetQimList, getImlist, resetImlist } from '../actions/index';
@@ -236,28 +237,14 @@ class Home extends Component {
 
           <img src="../../background.png" alt="Smiley face" height="250" />
           <h5> Choose in which dataset do you want to look up for similar images: </h5>
-
-          <label className="radio-inline" onClick={()=>{
-              this.props.resetQimList();
-              let datasetChosed = { condition: true, name:"oxford"};
-              this.props.getQimList(datasetChosed.name);
-              this.setState({datasetChosed});
-          }} ><input type="radio" name="optradio" />OXFORD</label>
-
-          <label className="radio-inline" onClick={()=>{
-            this.props.resetQimList();
-            let datasetChosed = { condition: true, name:"paris"};
-            this.props.getQimList(datasetChosed.name);
-            this.setState({datasetChosed});
-          }} ><input type="radio" name="optradio" />PARIS</label>
-
-          <label className="radio-inline" onClick={()=>{
-            this.props.resetQimList();
-            let datasetChosed = { condition: true, name:"instre"};
-            this.props.getQimList(datasetChosed.name);
-            this.setState({datasetChosed});
-          }} ><input type="radio" name="optradio" />INSTRE</label>
-
+          {options_NavBar.map((opt,i)=>{
+            return(<label key={`key-home-${i}`} className="radio-inline" onClick={()=>{
+                this.props.resetQimList();
+                let datasetChosed = { condition: true, name:opt.name.toLowerCase()};
+                this.props.getQimList(datasetChosed.name);
+                this.setState({datasetChosed});
+            }} ><input type="radio" name="optradio" />{opt.name}</label>);
+          })}
         </section>
         <div>
           {this.renderDemos()}

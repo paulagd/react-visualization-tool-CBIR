@@ -1,0 +1,9 @@
+{
+  "name": "React visualization tool for CBIR",
+  "version": "0.0.0",
+  "description": "A tool in React to visualize CBIR systems.",
+  "title": "React visualization tool for CBIR",
+  "template": {
+  	"forceLanguage": "en"
+  }
+}
