@@ -5,5 +5,9 @@
   "title": "React visualization tool for CBIR",
   "template": {
   	"forceLanguage": "en"
+  },
+  "header": {
+      "title": "General setup & customization",
+      "filename": "documentation/data/apidoc_header.md"
   }
 }
