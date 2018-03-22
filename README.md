@@ -58,7 +58,7 @@ Usage
 
 ```
 
-## Documentation
+## Documentation of the project
 
 Install apidoc
 ```
@@ -72,4 +72,4 @@ npm run doc
 
 ```
 
-Open the file 'index.html' stored in the folder 'documentation'.
+> Open the file 'index.html' stored in the folder 'documentation' to see how to customize the system.
