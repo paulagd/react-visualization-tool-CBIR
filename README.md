@@ -1,6 +1,27 @@
 # react-visualization-tool-CBIR
 ---
-A tool to visualize the results of a image retrieval engine system.
+This project is a tool that allows to visualize the results of a image retrieval
+engine system. The main function is to compute the rankin of similar images for a
+query given and visualize the results.
+
+It has three different modes implemented:
+
+    1. **Explorer mode**
+        The user can explore the dataset through `clickable` images which become new
+        queries in order to display its rankin.
+
+    2. **Annotation mode**
+        The user can annotate the images which are similar and the ones which are
+        not, so that a complete feedback is given to the system. After some computations
+        in the current image retrieval engine system, the new and updated rankin
+        can be resent and updated.
+
+    3. **Query expansion mode**
+        The user can use this mode to experiment with different queries and see how
+        the accuracy of the system and of each singular image improves or not
+        depending on which images are selected to compute the `multi query`.
+
+
 ---
 
 ## Getting started
