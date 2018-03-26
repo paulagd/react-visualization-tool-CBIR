@@ -6,6 +6,7 @@ import App from './components/common/App';
 import NotFound from './components/common/NotFound';
 import Store from './store';
 import Home from './components/Home';
+import Greeting from './components/common/Greeting';
 
 import DatasetPage from './components/Images/DatasetPage';
 import ImageWithRelateds from './components/Images/ImageWithRelateds';
@@ -13,13 +14,9 @@ import ImageWithRelateds from './components/Images/ImageWithRelateds';
 import { options_NavBar } from './customize.js';
 import { getQimList, resetQimList, resetErrorMessage } from './actions/index';
 
-const Test = ()=>{
-  return(<h2 style={{"paddingLeft":"35%"}} >W E L C O M E !</h2>)
-};
-
 export default (
     <Route path="/" components={App} options={options_NavBar} history={browserHistory}>
-        <IndexRoute components={Test}/>
+        <IndexRoute components={Greeting}/>
         <Route path="/home" component={Home} onEnter={()=>{
             Store.dispatch(resetErrorMessage());
         }} />

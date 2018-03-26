@@ -328,7 +328,7 @@ class ImageWithRelateds extends Component {
     }
 
     renderAccuracy(){
-      if(this.state.accuracy){
+      if(this.state.accuracy && this.state.accuracy.initial & this.state.accuracy.final){
         if(this.state.accuracy.initial > this.state.accuracy.final) {
           return(<div className="alert alert-danger">
                   <strong>Oh oh...</strong> Accuracy decreased from {this.state.accuracy.initial} to {this.state.accuracy.final}.
@@ -389,7 +389,7 @@ class ImageWithRelateds extends Component {
         <div style={{
             padding: "2px",
             color: "#666"
-          }}> Please, select an image and annotate if it is similar to thw query or not.
+          }}> Please, select an image and annotate if it is similar to the query or not.
            When you finish, press SUBMIT : </div>
           <Gallery
             images={array}

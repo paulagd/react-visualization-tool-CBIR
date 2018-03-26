@@ -46,7 +46,29 @@ body, html {
     .content {
       min-height: 100%;
       overflow: auto;
+      .greeting {
+        h2 {
+          padding-top: 2%;
+          padding-left: 35%;
+        }
 
+        div {
+          display: inline-block;
+          div {
+            padding-top: 2%;
+            padding-bottom: 2%;
+            padding-left: 3%;
+          }
+        }
+
+        .paragraf {
+          padding-left: 10%;
+          padding-right: 10%;
+          padding-top: 30px;
+          padding-bottom: 0px;
+          font-size: 18px;
+        }
+      }
     }
   }
 }
