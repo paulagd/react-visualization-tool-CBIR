@@ -71,8 +71,8 @@ export function getRankinOfImage(id, url, encoded_image, dataset) {
                   type: TYPES.GET_IMLIST,
                   payload: req
               });
-          }).catch((resp) => {
-              dispatch(errorMessage(`${resp} in the action of getting the ranking of an image`));
+          }).catch((error) => {
+              dispatch(errorMessage(`${Object.assign({}, error).response.data.messageError} `));
           });
       }).catch((response) => {
           dispatch(errorMessage(`${response} in action getIimlist`));
@@ -251,8 +251,9 @@ export function sendFeedback_QE(id, url, encoded_image, dataset, path, similar_l
                 type: TYPES.UPDATED_RANKING_FEEDBACK,
                 payload: {request, dataset}
             });
-        }).catch((response) => {
-            // dispatch(errorMessage(`${response} in action sendFeedback_receiveRanking`));
+        }).catch((error) => {
+            console.log('error in action sendFeedback_QE ', error);
+            dispatch(errorMessage(`${Object.assign({}, error).response.data.messageError}`));
         });
     };
 }
@@ -323,8 +324,9 @@ export function send_Annotations(id, url, encoded_image, dataset, path, similar_
 
             console.log('FEEDBACK SENT. THANKS');
 
-        }).catch((response) => {
-            dispatch(errorMessage(`${response} in action sendFeedback_receiveRanking`));
+        }).catch((error) => {
+
+            dispatch(errorMessage(`${Object.assign({}, error).response.data.messageError}`));
         });
     };
 }

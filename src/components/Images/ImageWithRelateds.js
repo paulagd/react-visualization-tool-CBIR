@@ -97,11 +97,11 @@ class ImageWithRelateds extends Component {
     }
 
     handleOptionChange(mode){
-      this.setState({ activeMode: mode, imgsSelected: []});
+      this.setState({ activeMode: mode, imgsSelected: []}); // activePage:1
 
       if(!(mode == 'e')){
         this.setState({ accuracy:null ,images: this.state.relatedImages && this.state.relatedImages.list
-          && this.state.relatedImages.list.length ? this.display_Gallery_Images(mode) : []});
+          && this.state.relatedImages.list.length ? this.display_Gallery_Images(mode, null) : []});
       } else {
         this.setState({accuracy:null, images: this.state.relatedImages && this.state.relatedImages.list
           && this.state.relatedImages.list.length ? this.display_ReactRpg_Images() : []});
@@ -112,6 +112,7 @@ class ImageWithRelateds extends Component {
 
     display_Gallery_Images(mode, pageNumber) {
       //display the 5000 images in order divided in pages containing 28 images (ItemsPerPage)
+
       let array = [];
       let dataset = this.state.relatedImages.dataset;
       let page = pageNumber ? pageNumber : this.state.activePage;
@@ -154,6 +155,7 @@ class ImageWithRelateds extends Component {
       }
 
       array = this.splitArray(array, ItemsPerPage);
+
       // IDEA
       // this.setState({images: this.state.relatedImages && this.state.relatedImages.list
       //   && this.state.relatedImages.list.length ? array : []});
@@ -441,7 +443,7 @@ class ImageWithRelateds extends Component {
                     this.props.relatedImages.list.length ? this.display_ReactRpg_Images() : []))
             : (this.state.images && this.state.images.length ? this.state.images :
                   (this.props.relatedImages && this.props.relatedImages.list &&
-                    this.props.relatedImages.list.length ? this.display_Gallery_Images() : []));
+                    this.props.relatedImages.list.length ? this.display_Gallery_Images(this.state.activeMode,null) : []));
 
        // let array = (this.state.activeMode == 'e') ?
        //        (this.state.images && this.state.images.length ? this.state.images :
