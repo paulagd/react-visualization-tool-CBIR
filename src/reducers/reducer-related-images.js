@@ -1,6 +1,6 @@
 import * as TYPES from '../actions/types';
 
-const INITIAL_STATE = { getRankin: {img_list:null, dataset:null}, img_info:null };
+const INITIAL_STATE = { getRankin: {img_list:null, dataset:null}, img_info:null ,messageError: null};
 
 export default function(state = INITIAL_STATE, action) {
   switch (action.type) {
@@ -9,7 +9,7 @@ export default function(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         getRankin: {
           img_list: action.payload.request.data,
-          dataset:action.payload.dataset
+          dataset:action.payload.dataset,
         }
       });
 
@@ -38,12 +38,25 @@ export default function(state = INITIAL_STATE, action) {
       return Object.assign({}, state, {
         confirm: null
       });
+
     case TYPES.RESET_RANKIN_IMG:
       return Object.assign({}, state, {
         getRankin: {
           img_list: null,
-          dataset: null
+          dataset: null,
         }
+      });
+
+    case TYPES.ERROR_MESSAGE:
+    //   return { ...state, messageError: action.payload.data };
+      return Object.assign({}, state, {
+        messageError: action.payload.data
+      });
+
+    case TYPES.RESET_ERROR_MESSAGE:
+    //   return { ...state, messageError: action.payload.data };
+      return Object.assign({}, state, {
+        messageError: null
       });
 
     default:

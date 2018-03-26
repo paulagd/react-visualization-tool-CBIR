@@ -71,9 +71,11 @@ export function getRankinOfImage(id, url, encoded_image, dataset) {
                   type: TYPES.GET_IMLIST,
                   payload: req
               });
+          }).catch((resp) => {
+              dispatch(errorMessage(`${resp} in the action of getting the ranking of an image`));
           });
       }).catch((response) => {
-          dispatch(errorMessage(`${response} in action getRankinOfImage`));
+          dispatch(errorMessage(`${response} in action getIimlist`));
       });
   };
 
@@ -380,6 +382,18 @@ export function resetAnnotations() {
     return function(dispatch) {
           dispatch({
               type: TYPES.RESET_ANNOTATIONS
+          });
+        // }.catch((response) => {
+        //     dispatch(errorMessage(`${response} in action getRankinOfImage`));
+        // });
+    };
+}
+
+//RESET_ERROR_MESSAGE
+export function resetErrorMessage() {
+    return function(dispatch) {
+          dispatch({
+              type: TYPES.RESET_ERROR_MESSAGE
           });
         // }.catch((response) => {
         //     dispatch(errorMessage(`${response} in action getRankinOfImage`));

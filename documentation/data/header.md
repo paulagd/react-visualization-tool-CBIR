@@ -1,4 +1,6 @@
 
+## **Customization**
+
 **Datasets setup**
 
 * The project has a file called `customize.js` where the desired datasets can be setup.

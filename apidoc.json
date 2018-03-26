@@ -7,7 +7,7 @@
   	"forceLanguage": "en"
   },
   "header": {
-      "title": "General setup & customization",
-      "filename": "documentation/data/apidoc_header.md"
+      "title": "General setup",
+      "filename": "documentation/data/header.md"
   }
 }

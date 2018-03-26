@@ -36,6 +36,7 @@ class ImageWithRelateds extends Component {
           activeMode:"e",
           images : [],
           imgsSelected: [],
+          messageError: this.props.messageError,
           imlist: this.props.imlist ? this.props.imlist: [],
           accuracy: this.props.accuracy ? this.props.accuracy : null,
           images :this.props.relatedImages && this.props.relatedImages.list && this.props.relatedImages.list.length ? this.display_ReactRpg_Images() : []
@@ -53,10 +54,12 @@ class ImageWithRelateds extends Component {
            (JSON.stringify(this.props.params.id) !== JSON.stringify(newProps.params.id)) ||
            (JSON.stringify(this.props.imlist) !== JSON.stringify(newProps.imlist)) ||
            (JSON.stringify(this.props.accuracy) !== JSON.stringify(newProps.accuracy)) ||
+           (JSON.stringify(this.props.messageError) !== JSON.stringify(newProps.messageError)) ||
            (JSON.stringify(this.props.location.query.url) !== JSON.stringify(newProps.location.query.url))) {
 
             this.setState({
               id: newProps.params.id,
+              messageError: newProps.messageError,
               accuracy: newProps.accuracy ? newProps.accuracy : null,
               imlist: newProps.imlist && newProps.imlist.length ? newProps.imlist: [],
               url: newProps.location.query && newProps.location.query.url ? newProps.location.query.url : null,
@@ -499,39 +502,44 @@ class ImageWithRelateds extends Component {
                       }
                   </div>
               </div>
-              <div className = "images-content" >
-                {((array.length< 1) || !(this.state.relatedImages.list && (this.state.relatedImages.list.length >0))) ?
-                  ( <div>
+              {this.state.messageError ?
+                <div>
+                  {this.loading(false)}
+                  <NotFound ErrorMsg={this.state.messageError} />
+                </div> :
+                (<div className = "images-content" >
+                  {((array.length< 1) || !(this.state.relatedImages.list && (this.state.relatedImages.list.length >0))) ?
+                    (<div>
                       { this.loading(true) }
-                  </div>
-                  ):(
-                    !(this.state.activeMode == 'e') ?
+                     </div>
+                    ):(
+                      !(this.state.activeMode == 'e') ?
+                        <div>
+                            {this.loading(false)}
+                            {this.renderSentence(array)}
+                            <div style={{
+                                display: "block",
+                                minHeight: "1px",
+                                width: "100%",
+                                border: "1px solid #ddd",
+                                overflow: "auto"}} />
+                      </div> :
                       <div>
                           {this.loading(false)}
-                          {this.renderSentence(array)}
+                          <div style={{
+                              padding: "2px",
+                              color: "#666"
+                            }}> Feel free of exploring the dataset for ever: </div>
                           <div style={{
                               display: "block",
                               minHeight: "1px",
                               width: "100%",
                               border: "1px solid #ddd",
-                              overflow: "auto"}} />
-                    </div> :
-                    <div>
-                        {this.loading(false)}
-                        <div style={{
-                            padding: "2px",
-                            color: "#666"
-                          }}> Feel free of exploring the dataset for ever: </div>
-                        <div style={{
-                            display: "block",
-                            minHeight: "1px",
-                            width: "100%",
-                            border: "1px solid #ddd",
-                            overflow: "auto"}}> </div>
-                      <ReactRpg imagesArray={array} columns={[1, 2, 4]} padding={10} />
-                  </div>
-                )}
-              </div>
+                              overflow: "auto"}}> </div>
+                        <ReactRpg imagesArray={array} columns={[1, 2, 4]} padding={10} />
+                    </div>
+                  )}
+                </div>)}
               <div className="footer-content">
                   <Pagination
                    activePage={this.state.activePage}
@@ -557,22 +565,15 @@ class ImageWithRelateds extends Component {
     }
 
     render() {
-      const { messageError } = this.props;
-      if(messageError){
-          return(<div>
-                    <NotFound ErrorMsg={messageError} />
-                </div>);
-      } else {
-          return (
-            <div className="content-image-related" >
-              <h3>
-                IMAGES SIMILARS TO {this.state.id.toUpperCase()}.JPG
-              </h3>
-              {this.renderContent()}
-              {this.isLoading ? this.renderPopUp() : null}
-            </div>
-          );
-      }
+      return (
+        <div className="content-image-related" >
+          <h3>
+            IMAGES SIMILARS TO {this.state.id.toUpperCase()}.JPG
+          </h3>
+          {this.renderContent()}
+          {this.isLoading ? this.renderPopUp() : null}
+        </div>
+      );
     }
 
 }
@@ -581,7 +582,7 @@ function mapStateToProps(state) {
   return { relatedImages: { list: state.reducerRelatedImages.getRankin.img_list, dataset: state.reducerRelatedImages.getRankin.dataset} ,
            accuracy: state.reducerRelatedImages.getRankin.accuracy ,
            infoIMG: state.reducerRelatedImages.img_info ,
-           messageError: state.reducerErrorMessage.messageError,
+           messageError: state.reducerRelatedImages.messageError,
            annotations_sent: state.reducerRelatedImages.getRankin.confirm,
            imlist: state.reducerImages.imlist
          };
