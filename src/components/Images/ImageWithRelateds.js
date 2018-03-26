@@ -328,22 +328,25 @@ class ImageWithRelateds extends Component {
     }
 
     renderAccuracy(){
-      if(this.state.accuracy && this.state.accuracy.initial & this.state.accuracy.final){
-        if(this.state.accuracy.initial > this.state.accuracy.final) {
-          return(<div className="alert alert-danger">
-                  <strong>Oh oh...</strong> Accuracy decreased from {this.state.accuracy.initial} to {this.state.accuracy.final}.
-                </div>);
-        } else if (this.state.accuracy.initial < this.state.accuracy.final){
-          return(<div className="alert alert-success">
-                  <strong>Oh yes!</strong> Accuracy increased from {this.state.accuracy.initial} to {this.state.accuracy.final}.
-                </div>);
-        } else if(this.state.accuracy.initial && (this.state.accuracy.initial == this.state.accuracy.final)){
-          return(<div className="alert alert-info">
-                  <strong>INFO</strong> Accuracy stayed the same: {this.state.accuracy.final}.
-                </div>);
+      console.log('acc',this.state.accuracy);
+      if(this.state.accuracy){
+        if(this.state.accuracy.initial && this.state.accuracy.final){
+          if(this.state.accuracy.initial > this.state.accuracy.final) {
+            return(<div className="alert alert-danger">
+                    <strong>Oh oh...</strong> Accuracy decreased from {this.state.accuracy.initial} to {this.state.accuracy.final}.
+                  </div>);
+          } else if (this.state.accuracy.initial < this.state.accuracy.final){
+            return(<div className="alert alert-success">
+                    <strong>Oh yes!</strong> Accuracy increased from {this.state.accuracy.initial} to {this.state.accuracy.final}.
+                  </div>);
+          } else if(this.state.accuracy.initial && (this.state.accuracy.initial == this.state.accuracy.final)){
+            return(<div className="alert alert-info">
+                    <strong>INFO</strong> Accuracy stayed the same: {this.state.accuracy.final}.
+                  </div>);
+          }
         } else {
           return(<div className="alert alert-danger">
-                  <strong>ERROR</strong> No accuracy recived .
+                  <strong>OPS!</strong> Accuracy recived is not in the complete format.
                 </div>);
         }
       }
