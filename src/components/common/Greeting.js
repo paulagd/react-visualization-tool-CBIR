@@ -10,7 +10,7 @@ import '../../styles/app.scss';
 
       render(){
           return (
-              <div className="content greeting">
+              <div className="container content greeting">
                 <h2>W E L C O M E !</h2>
                 <div>
                   <p className="text-justify paragraf">
@@ -26,33 +26,47 @@ import '../../styles/app.scss';
                     or some other functionalities can be customized following the steps given
                     in the <a id="mylink" href="../../../documentation/index.html">
                     documentation</a>.</p>
-
-                    <p className="text-justify paragraf">The main functionalities offered in this system are:</p>
-                  <div className="paragraf">
-                    <button type="button" className="btn btn-info" data-toggle="collapse"
-                       data-target="#demo">Explorer mode</button>
-                    <div id="demo" className="collapse text-justify">
-                      The user can explore the dataset through `clickable` images which become new
-                      queries in order to display its ranking.
+                  <p className="text-justify paragraf">The main functionalities offered in this system are:</p>
+                  <div className="panel-group paragraf" id="accordion">
+                  <div className="panel panel-default">
+                    <div className="panel-heading">
+                      <h4 className="panel-title" style={{border: 0}}>
+                        Explorer mode
+                      </h4>
                     </div>
-                    <button type="button" className="btn btn-info" data-toggle="collapse"
-                       data-target="#demo">Annotation mode</button>
-                    <div id="demo" className="collapse text-justify">
-                       The user can annotate the images which are similar and the ones which are
-                       not, so that a complete feedback is given to the system. After some computations
-                       in the current image retrieval engine system, the new and updated ranking
-                       can be resent and updated.
-                    </div>
-                    <button type="button" className="btn btn-info" data-toggle="collapse"
-                       data-target="#demo">Query expansion mode</button>
-                    <div id="demo" className="collapse text-justify">
-                      The user can use this mode to experiment with different queries and see how
-                      the accuracy of the system and of each singular image improves or not
-                      depending on which images are selected to compute the `multi query`.
+                    <div className="panel-collapse collapse in">
+                      <div className="panel-body">The user can explore the dataset through
+                        <strong>clickable</strong> images which become new queries in order
+                         to display its ranking.</div>
                     </div>
                   </div>
-
+                  <div className="panel panel-default">
+                    <div className="panel-heading">
+                      <h4 className="panel-title">
+                        Annotation mode
+                      </h4>
+                    </div>
+                    <div  className="panel-collapse collapse">
+                      <div className="panel-body">The user can annotate the images which are
+                      similar and the ones which are not, so that a complete feedback is given
+                      to the system. After some computations in the current image retrieval
+                      engine system, the new and updated ranking can be resent and updated.</div>
+                    </div>
+                  </div>
+                  <div className="panel panel-default">
+                    <div className="panel-heading">
+                      <h4 className="panel-title">
+                        Query expansion mode
+                      </h4>
+                    </div>
+                    <div className="panel-collapse collapse">
+                      <div className="panel-body">  The user can use this mode to experiment with different queries
+                        and see how the accuracy of the system and of each singular image improves or not
+                        depending on which images are selected to compute the <strong>multi query</strong>.</div>
+                    </div>
+                  </div>
                 </div>
+               </div>
               </div>
           );
       }
