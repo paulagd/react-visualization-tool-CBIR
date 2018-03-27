@@ -210,7 +210,6 @@ class ImageWithRelateds extends Component {
 
     onSelectThumbnail (images, index) {
         let img = images[index];
-        // TODO: annotacio recursiva ?
 
           if(img.hasOwnProperty("isSelected")) {
             if(!img.isSelected) {
@@ -298,15 +297,17 @@ class ImageWithRelateds extends Component {
       const index_imgs = (i-ItemsPerPage*(this.state.activePage-1));
       let imgsSelected = this.state.imgsSelected;
 
-      images[index_imgs].isPositive = true;
-      images[index_imgs].idSelected = res.IdSequence;
-      images[index_imgs].customOverlay.props.children[1].props.style.display = "none";
-      imgsSelected.push(images[index_imgs]);
+      if(images[index_imgs].hasOwnProperty("isSelected") && images[index_imgs].isSelected == true){
+        images[index_imgs].isPositive = true;
+        images[index_imgs].idSelected = res.IdSequence;
+        images[index_imgs].customOverlay.props.children[1].props.style.display = "none";
+        imgsSelected.push(images[index_imgs]);
 
-      this.setState({
-          images,
-          imgsSelected
-      });
+        this.setState({
+            images,
+            imgsSelected
+        });
+      }
     }
 
     negativeFeedback(i){
@@ -316,19 +317,20 @@ class ImageWithRelateds extends Component {
       const index_imgs = (i-ItemsPerPage*(this.state.activePage-1));
       let imgsSelected = this.state.imgsSelected;
 
-      images[index_imgs].isPositive = false;
-      images[index_imgs].idSelected = res.IdSequence;
-      images[index_imgs].customOverlay.props.children[0].props.style.display = "none";
-      imgsSelected.push(images[index_imgs]);
+      if(images[index_imgs].hasOwnProperty("isSelected") && images[index_imgs].isSelected == true){
+        images[index_imgs].isPositive = false;
+        images[index_imgs].idSelected = res.IdSequence;
+        images[index_imgs].customOverlay.props.children[0].props.style.display = "none";
+        imgsSelected.push(images[index_imgs]);
 
-      this.setState({
-          images,
-          imgsSelected
-      });
+        this.setState({
+            images,
+            imgsSelected
+        });
+      }
     }
 
     renderAccuracy(){
-      console.log('acc',this.state.accuracy);
       if(this.state.accuracy){
         if(this.state.accuracy.initial && this.state.accuracy.final){
           if(this.state.accuracy.initial > this.state.accuracy.final) {
