@@ -33,7 +33,7 @@ class App extends Component {
     if(this.props.route.options) {
       return(<div className="navbar-header nav">
            <a className="navbar-brand" id="title" href="/" >
-              CBIR SVISUALIZATION TOOL
+              CBIR VISUALIZATION TOOL
           </a>
           <li className="nav-item" key={`key-9999`}>
             <IndexLink to='/home' className="nav-link active" href="#">HOME</IndexLink>

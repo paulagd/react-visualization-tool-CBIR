@@ -26,7 +26,8 @@ class DatasetPage extends Component {
       title: this.props.route.path,
       activePage: 1,
       n_pages: 0,
-      qimList: this.props.qimList ? this.props.qimList.slice(0,56) : [],
+      // qimList: this.props.qimList ? this.props.qimList.slice(0,56) : [],
+      qimList: this.props.qimList ? this.props.qimList : [],
       imlist: this.props.imlist ? this.props.imlist: []
     };
   }
@@ -47,7 +48,8 @@ class DatasetPage extends Component {
 
           this.setState({
               activePage:1,
-              qimList: newProps.qimList && newProps.qimList.length ? newProps.qimList.slice(0,56) : [],
+              // qimList: newProps.qimList && newProps.qimList.length ? newProps.qimList.slice(0,56) : [],
+              qimList: newProps.qimList && newProps.qimList.length ? newProps.qimList : [],
               imlist: newProps.imlist && newProps.imlist.length ? newProps.imlist: [],
               n_pages:  newProps.qimList ? Math.ceil(newProps.qimList.length / ItemsPerPage) : null,
               title: newProps.route.path,
