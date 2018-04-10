@@ -177,31 +177,33 @@ class ImageWithRelateds extends Component {
           let obj = this.state.relatedImages.list[j];
           let url = "";
 
-          if(obj.Image.indexOf("/") != -1){
-            let id_aux = getIdFromPath(obj.Image, this.state.imlist);
-            url = this.state.url_imgs+ id_aux +`?dataset=${dataset}`;
-          }else{
-            let id_complete = (obj.Image.indexOf(".jpg") == -1) ? `${obj.Image}.jpg` : obj.Image;
-            url = this.state.url_imgs+ id_complete +`?dataset=${dataset}`;
-          }
-          array.push({                                           // MODE Explorer
-              url:url,
-              clickHandler: (path) => {
-                  if(this.state.activeMode == "e"){
+          if(obj && obj.Image){
+            if(obj.Image.indexOf("/") != -1){
+              let id_aux = getIdFromPath(obj.Image, this.state.imlist);
+              url = this.state.url_imgs+ id_aux +`?dataset=${dataset}`;
+            }else{
+              let id_complete = (obj.Image.indexOf(".jpg") == -1) ? `${obj.Image}.jpg` : obj.Image;
+              url = this.state.url_imgs+ id_complete +`?dataset=${dataset}`;
+            }
+            array.push({                                           // MODE Explorer
+                url:url,
+                clickHandler: (path) => {
+                    if(this.state.activeMode == "e"){
 
-                    this.props.resetRanking();
-                    let id = obj.Image;
-                    if(obj.Image.indexOf("/") != -1){
-                      id = getIdFromPath(obj.Image, this.state.imlist);
+                      this.props.resetRanking();
+                      let id = obj.Image;
+                      if(obj.Image.indexOf("/") != -1){
+                        id = getIdFromPath(obj.Image, this.state.imlist);
+                      }
+                      browserHistory.push({
+                        pathname: `/images/${id}`,
+                        query: { dataset: this.state.relatedImages.dataset}
+                      });
+                      this.callRankingAction(id);
                     }
-                    browserHistory.push({
-                      pathname: `/images/${id}`,
-                      query: { dataset: this.state.relatedImages.dataset}
-                    });
-                    this.callRankingAction(id);
-                  }
-                },
-            });
+                  },
+              });
+           }
          }
       }
       array = this.splitArray(array, ItemsPerPage);

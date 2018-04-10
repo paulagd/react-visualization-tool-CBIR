@@ -5,9 +5,9 @@ const options_NavBar = [{
   },{
     name: 'PARIS',
     link: '/images/paris',
-  // },{
-    // name: 'UTK',
-    // link: '/images/utk',
+  },{
+    name: 'GROUPS',
+    link: '/images/groups',
   },{
     name: 'INSTRE',
     link: '/images/instre',
