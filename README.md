@@ -6,20 +6,88 @@ query given and visualize the results.
 
 It has three different modes implemented:
 
-    1. **Explorer mode**
+    1. Explorer mode
+
         The user can explore the dataset through `clickable` images which become new
         queries in order to display its ranking.
 
-    2. **Annotation mode**
+    2. Annotation mode
+
         The user can annotate the images which are similar and the ones which are
         not, so that a complete feedback is given to the system. After some computations
         in the current image retrieval engine system, the new and updated ranking
         can be resent and updated.
 
-    3. **Query expansion mode**
+    3. Query expansion mode
+
         The user can use this mode to experiment with different queries and see how
         the accuracy of the system and of each singular image improves or not
         depending on which images are selected to compute the `multi query`.
+
+
+---
+## Requirements
+
+* Nodejs v6.11.3
+* npm v5.4.2
+
+To install them, find your operating system to download in [here](https://nodejs.org/en/blog/release/v6.11.3/).
+
+    * Linux (tested in Ubuntu 16.04)
+
+      1. Download the .tar.gz file from the previous link.
+
+      2. Unpack the provided archive to /opt/nodejs:
+          > mkdir -p /opt/nodejs
+          > tar #name_of_the_downloaded_file -C /opt/nodejs
+          > mv #name_of_the_UNCOMPRESSED_downloaded_file 6.11.3
+
+      3. Create link to current node version
+
+          > cd /opt/nodejs
+          > ln -s 6.11.3 current
+
+      4. Create link to current node binary
+
+          > ln -s /opt/nodejs/current/bin/node /bin/node
+
+      5. Verify node version
+
+          > node -v
+
+      6. Update the npm version
+
+         > npm install -g npm@5.4.2
+
+      7. Verify the npm version
+
+         > npm -v
+
+    * MacOS
+
+       1. Download the .tar.gz file from the previous link.
+
+       2. Run the installer
+
+       3. Verify node version
+
+          > node -v
+
+       4. Update the npm version
+
+          > npm install -g npm@5.4.2
+
+       5. Verify the npm version
+
+          > npm -v
+
+
+> In case of `error` with the `node-gyp` in rebuild, execute the next commands:
+>
+> sudo add-apt-repository ppa:chris-lea/zeromq
+> sudo add-apt-repository ppa:chris-lea/libpgm
+> sudo apt-get update
+> sudo apt-get install libzmq3-dev
 
 
 ---
@@ -36,6 +104,22 @@ Set up the dependences
 npm install
 npm install --dev
 ```
+
+
+Install apidoc for the documentation of the project
+```
+npm install -g apidoc
+
+```
+
+Run documentation generation script:
+```
+npm run doc
+
+```
+
+> Open the file 'index.html' stored in the folder 'documentation' to see how to customize the system.
+
 Usage
 ---
 
@@ -78,19 +162,3 @@ Usage
 |---webpack.config.js # Webpack config gile
 
 ```
-
-## Documentation of the project
-
-Install apidoc
-```
-npm install -g apidoc
-
-```
-
-Run documentation generation script:
-```
-npm run doc
-
-```
-
-> Open the file 'index.html' stored in the folder 'documentation' to see how to customize the system.

@@ -16,6 +16,9 @@ This can be done by modifying the following code:
     },{
       name: 'INSTRE',
       link: '/images/instre',
+    },{
+      name: 'GROUPS',
+      link: '/images/groups',
     }];
 ```
 > options_NavBar is an array of objects where each object will correspond to one desired dataset.
