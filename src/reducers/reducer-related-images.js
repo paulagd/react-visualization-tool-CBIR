@@ -13,6 +13,11 @@ export default function(state = INITIAL_STATE, action) {
         }
       });
 
+    case TYPES.GET_INFO_IMG:
+      return Object.assign({}, state, {
+        img_info: action.payload.encoded_image
+      });
+
     case TYPES.UPDATED_RANKING_FEEDBACK:
       let accuracy = {initial: action.payload.request.data.initial, final:action.payload.request.data.final }
 
@@ -25,7 +30,6 @@ export default function(state = INITIAL_STATE, action) {
       });
 
     case TYPES.SEND_ANNOTATIONS:
-      // console.log(action.payload.request.data.json);
       return Object.assign({}, state, {
         getRankin: {
           img_list: action.payload.request.data.json,

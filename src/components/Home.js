@@ -77,18 +77,26 @@ class Home extends Component {
     this.setState({url: event.target.value});
   }
 
-  readFile(file, onLoadCallback){
-      var reader = new FileReader();
-      reader.onload = onLoadCallback;
-      reader.readAsDataURL(file);
-  }
-
   onDropAccepted(files) {
     const scope = this;
 
-    this.readFile(files[0], function(e) {
-      scope.setState({ files, encoded_image:e.target.result ,completeLoading: true});
+    this.getBase64(files[0],(e)=>{
+      scope.setState({ files, encoded_image:e ,completeLoading: true});
     });
+
+  }
+
+  getBase64(file, callback) {
+     var reader = new FileReader();
+     reader.readAsDataURL(file);
+     reader.onload = function () {
+       // console.log(reader);
+       callback(reader.result);
+     };
+     reader.onerror = function (error) {
+       console.log('-------- ERROR IN LOAD IMAGE FROM FILE: -----------', error);
+       callback(error);
+     };
   }
 
   onClickSlide(obj){
@@ -146,9 +154,13 @@ class Home extends Component {
         this.props.postEncodedInfo(this.state.encoded_image);
 
         if (this.state.files && this.state.files.length) {
+          // console.log(this.state.files[0].preview.split("/")[this.state.files[0].preview.split("/").length - 1]);
           browserHistory.push({
             pathname: '/images/unknown_id',
-            query: { url: this.state.files[0].preview, dataset: this.state.datasetChosed.name}
+            query: { url: this.state.files[0].preview,
+                     // encoded_image: this.state.encoded_image,
+                     dataset: this.state.datasetChosed.name
+                   }
           });
         } else {
           alert("Nothing to sumbit");

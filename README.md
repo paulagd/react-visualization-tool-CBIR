@@ -33,53 +33,53 @@ It has three different modes implemented:
 
 To install them, find your operating system to download in [here](https://nodejs.org/en/blog/release/v6.11.3/).
 
-    * Linux (tested in Ubuntu 16.04)
+* Linux (tested in Ubuntu 16.04)
 
-      1. Download the .tar.gz file from the previous link.
+  1. Download the .tar.gz file from the previous link.
 
-      2. Unpack the provided archive to /opt/nodejs:
-          > mkdir -p /opt/nodejs
-          > tar #name_of_the_downloaded_file -C /opt/nodejs
-          > mv #name_of_the_UNCOMPRESSED_downloaded_file 6.11.3
+  2. Unpack the provided archive to /opt/nodejs:
+      > mkdir -p /opt/nodejs
+      > tar #name_of_the_downloaded_file -C /opt/nodejs
+      > mv #name_of_the_UNCOMPRESSED_downloaded_file 6.11.3
 
-      3. Create link to current node version
+  3. Create link to current node version
 
-          > cd /opt/nodejs
-          > ln -s 6.11.3 current
+      > cd /opt/nodejs
+      > ln -s 6.11.3 current
 
-      4. Create link to current node binary
+  4. Create link to current node binary
 
-          > ln -s /opt/nodejs/current/bin/node /bin/node
+      > ln -s /opt/nodejs/current/bin/node /bin/node
 
-      5. Verify node version
+  5. Verify node version
 
-          > node -v
+      > node -v
 
-      6. Update the npm version
+  6. Update the npm version
 
-         > npm install -g npm@5.4.2
+     > npm install -g npm@5.4.2
 
-      7. Verify the npm version
+  7. Verify the npm version
 
-         > npm -v
+     > npm -v
 
-    * MacOS
+* MacOS
 
-       1. Download the .tar.gz file from the previous link.
+   1. Download the .tar.gz file from the previous link.
 
-       2. Run the installer
+   2. Run the installer
 
-       3. Verify node version
+   3. Verify node version
 
-          > node -v
+      > node -v
 
-       4. Update the npm version
+   4. Update the npm version
 
-          > npm install -g npm@5.4.2
+      > npm install -g npm@5.4.2
 
-       5. Verify the npm version
+   5. Verify the npm version
 
-          > npm -v
+      > npm -v
 
 
 > In case of `error` with the `node-gyp` in rebuild, execute the next commands:

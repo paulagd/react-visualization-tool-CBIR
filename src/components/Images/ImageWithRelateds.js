@@ -76,7 +76,7 @@ class ImageWithRelateds extends Component {
     callRankingAction(id) {
       let dataset = this.props.location.query.dataset;
       let ide = id ? id : this.state.id;
-      this.state.url ? this.props.getRankinOfImage(null, this.state.url, this.props.infoIMG, dataset) :
+      this.state.url ? this.props.getRankinOfImage(null, this.state.url, this.props.encoded_image, dataset) :
         this.props.getRankinOfImage(ide, null, null , dataset);
 
       this.setState({activePage:1});
@@ -282,11 +282,11 @@ class ImageWithRelateds extends Component {
       for(var i=0; i<images.length; i++){
         if(!(images[i].isPositive)){
           //if the images are negative ( or nothing --> mode = q)
-          (this.state.activeMode == 'a') ?  selected.negative.push(' '+images[i].src + '.jpg')
-          : selected.push(' '+images[i].src + '.jpg');
+          (this.state.activeMode == 'a') ?  selected.negative.push(images[i].src + '.jpg')
+          : selected.push(images[i].src + '.jpg');
         } else {
           //if the images are positive is because they are in mode 'a'
-          selected.positive.push(' '+images[i].src + '.jpg')
+          selected.positive.push(images[i].src + '.jpg')
         }
       }
       return selected;
@@ -424,7 +424,7 @@ class ImageWithRelateds extends Component {
       console.log("similar_list",similar_list);
       if(similar_list.positive || similar_list.negative ) {
         // MODE FEEDBACK
-        this.state.url ? this.props.send_Annotations(null, this.state.url , this.props.infoIMG , dataset, path, similar_list, this.state.activeMode)
+        this.state.url ? this.props.send_Annotations(null, this.state.url , this.props.encoded_image , dataset, path, similar_list, this.state.activeMode)
              : this.props.send_Annotations(this.state.id, null , null, dataset, path, similar_list, this.state.activeMode);
 
         //TODO: esperar propietat de confirma de sent annotations i reload
@@ -590,7 +590,7 @@ class ImageWithRelateds extends Component {
 function mapStateToProps(state) {
   return { relatedImages: { list: state.reducerRelatedImages.getRankin.img_list, dataset: state.reducerRelatedImages.getRankin.dataset} ,
            accuracy: state.reducerRelatedImages.getRankin.accuracy ,
-           infoIMG: state.reducerRelatedImages.img_info ,
+           encoded_image: state.reducerRelatedImages.img_info ,
            messageError: state.reducerRelatedImages.messageError,
            annotations_sent: state.reducerRelatedImages.getRankin.confirm,
            imlist: state.reducerImages.imlist
