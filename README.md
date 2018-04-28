@@ -24,12 +24,17 @@ It has three different modes implemented:
         the accuracy of the system and of each singular image improves or not
         depending on which images are selected to compute the `multi query`.
 
+> Repositories related:
+>
+> * [Nodejs server](https://github.com/paulagd/node-server)
+> * [Python CBIR random example](https://bitbucket.org/emohe/python-server-dummy)
 
 ---
 ## Requirements
 
 * Nodejs v6.11.3
 * npm v5.4.2
+* Python 2.7
 
 To install them, find your operating system to download in [here](https://nodejs.org/en/blog/release/v6.11.3/).
 
@@ -131,34 +136,21 @@ Usage
 ## Project Structure
 
 ```
-|---node_modules # Contains all the dependences of the project
-|---documentation # Contains the documentation of the project
-|-------actions
-|-----------index.js
-|-----------types.js
+|---node_modules      # Contains all the dependences of the project.
+|---documentation     # Contains the documentation of the project.
+|-------actions       # Contains the main actions computing the API calls.
 |-------components
-|-----------Home.js
-|-----------Images
-|---------------DatasetPage.js
-|---------------ImageWithRelateds.js
-|-----------common
-|---------------App.js
-|---------------NotFound.js
-|---------------PopUpLoader.js
 |-------reducers
-|-----------index.js
-|-----------reducer-error-message.js
-|-----------reducer-images.js
-|-----------reducer-related-images.js
 |-------styles
-|-------index.js # Build entry
-|-------routes.js # Build routes
-|-------customize.js # File to customize the system
-|-------store.js # File containing the store
-|---.babelrc # Babel config file
-|---.gitignore # Files to ignore
+|-------index.js      # Build entry
+|-------routes.js     # Build routes
+|-------customize.js  # File to customize the system
+|-------store.js      # File containing the store
+|---.babelrc          # Babel config file
+|---.gitignore        # Files to ignore
+|---apidoc.json       # contains the configuration to run the documentation
 |---index.html
-|---package.json  #Dependences installed
+|---package.json      #Dependences installed
 |---webpack.config.js # Webpack config gile
 
 ```
