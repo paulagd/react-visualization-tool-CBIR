@@ -123,34 +123,35 @@ class ImageWithRelateds extends Component {
         for (var j = offset; j < (offset+ItemsPerPage); j++) {
 
           let obj = this.state.relatedImages.list[j];
-          let url = this.state.url_imgs+ obj.Image +`.jpg?dataset=${dataset}`;
+          if(obj){
+            let url = this.state.url_imgs+ obj.Image +`.jpg?dataset=${dataset}`;
+            if(obj.Image.indexOf("/") != -1){
+              let id_aux = getIdFromPath(obj.Image, this.state.imlist);
+              url = this.state.url_imgs+ id_aux +`?dataset=${dataset}`;
+            }
 
-          if(obj.Image.indexOf("/") != -1){
-            let id_aux = getIdFromPath(obj.Image, this.state.imlist);
-            url = this.state.url_imgs+ id_aux +`?dataset=${dataset}`;
-          }
-
-          (mode == 'a') ?
-            array.push({
-                src:obj ? obj.Image : 'error',
-                thumbnail: url,
-                isPositive: false,
-                thumbnailWidth: 650,
-                thumbnailHeight: 650,
-                isSelected: false,
-                customOverlay: <div id = {j} style={{ opacity: '0' }}>
-                                <button className="left btn-success" style={{display:"inline-block"}}
-                                  onClick = {this.positiveFeedback.bind(this,j)} >YES</button>
-                                <button className="right btn-danger" style={{display:"inline-block"}}
-                                  onClick= {this.negativeFeedback.bind(this,j)} >NO</button>
-                              </div>
-              }) : array.push({
-                    src:obj.Image,
-                    thumbnail: url,
-                    thumbnailWidth: 650,
-                    thumbnailHeight: 650,
-                    isSelected: false,
-              });
+            (mode == 'a') ?
+              array.push({
+                  src: obj ? obj.Image : 'error',
+                  thumbnail: url,
+                  isPositive: false,
+                  thumbnailWidth: 650,
+                  thumbnailHeight: 650,
+                  isSelected: false,
+                  customOverlay: <div id = {j} style={{ opacity: '0' }}>
+                                  <button className="left btn-success" style={{display:"inline-block"}}
+                                    onClick = {this.positiveFeedback.bind(this,j)} >YES</button>
+                                  <button className="right btn-danger" style={{display:"inline-block"}}
+                                    onClick= {this.negativeFeedback.bind(this,j)} >NO</button>
+                                </div>
+                }) : array.push({
+                      src:obj.Image,
+                      thumbnail: url,
+                      thumbnailWidth: 650,
+                      thumbnailHeight: 650,
+                      isSelected: false,
+                });
+            }
          }
       }
 
