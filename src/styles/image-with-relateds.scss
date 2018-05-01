@@ -79,10 +79,14 @@
             border:0px;
             padding: 0px;
 
+            .system-ap{
+              display:inline-block;
+              // margin-bottom: 200%;
+              vertical-align: top !important;
+              margin-top: 6%;
+            }
+
             .button {
-              // margin-left: 20px;
-              // margin-top: 5%;
-              // margin-bottom: 3%;
               width: 110px;
               height: 60px;
               font-family: sans-serif;
@@ -93,6 +97,7 @@
               background: #e4e8eb;
               border: solid #798287 2px;
               text-decoration: none;
+              margin-left: 10%;
 
             }
           }

@@ -1,6 +1,6 @@
 import * as TYPES from '../actions/types';
 
-const INITIAL_STATE = { getRankin: {img_list:null, dataset:null}, img_info:null ,messageError: null};
+const INITIAL_STATE = { getRankin: {img_list:null, dataset:null, ap_system:null}, img_info:null ,messageError: null};
 
 export default function(state = INITIAL_STATE, action) {
   switch (action.type) {
@@ -8,7 +8,8 @@ export default function(state = INITIAL_STATE, action) {
     case TYPES.GET_RANKIN_IMG:
       return Object.assign({}, state, {
         getRankin: {
-          img_list: action.payload.request.data,
+          img_list: action.payload.request.data.json,
+          ap_system:action.payload.request.data.mAP,
           dataset:action.payload.dataset,
         }
       });
@@ -19,12 +20,15 @@ export default function(state = INITIAL_STATE, action) {
       });
 
     case TYPES.UPDATED_RANKING_FEEDBACK:
-      let accuracy = {initial: action.payload.request.data.initial, final:action.payload.request.data.final }
+      let accuracy = {initial: action.payload.request.data.initial,
+                      final:action.payload.request.data.final,
+                      }
 
       return Object.assign({}, state, {
         getRankin: {
           img_list: action.payload.request.data.json,
           accuracy,
+          ap_system: action.payload.request.data.mAP,
           dataset:action.payload.dataset
         }
       });

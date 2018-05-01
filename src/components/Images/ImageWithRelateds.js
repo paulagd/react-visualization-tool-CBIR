@@ -39,6 +39,7 @@ class ImageWithRelateds extends Component {
           messageError: this.props.messageError,
           imlist: this.props.imlist ? this.props.imlist: [],
           accuracy: this.props.accuracy ? this.props.accuracy : null,
+          ap_system: this.props.ap_system,
           images :this.props.relatedImages && this.props.relatedImages.list && this.props.relatedImages.list.length ? this.display_ReactRpg_Images() : []
         };
         isLoading:false;
@@ -61,6 +62,7 @@ class ImageWithRelateds extends Component {
               id: newProps.params.id,
               messageError: newProps.messageError,
               accuracy: newProps.accuracy ? newProps.accuracy : null,
+              ap_system: newProps.ap_system,
               imlist: newProps.imlist && newProps.imlist.length ? newProps.imlist: [],
               url: newProps.location.query && newProps.location.query.url ? newProps.location.query.url : null,
               relatedImages:{
@@ -333,10 +335,27 @@ class ImageWithRelateds extends Component {
       }
     }
 
+    renderSystemAccuracy(){
+      let new_mAP = this.state.ap_system ? this.state.ap_system : '-';
+      if(new_mAP < 0.5){
+        return(<div className="alert alert-danger system-ap">
+                <strong>System AP : </strong> {new_mAP}
+              </div>);
+      } else {
+        return(<div className="alert alert-success system-ap">
+                <strong>system AP : </strong> {new_mAP}
+              </div>);
+      }
+    }
+
     renderAccuracy(){
       if(this.state.accuracy){
         if(this.state.accuracy.initial && this.state.accuracy.final){
-          if(this.state.accuracy.initial > this.state.accuracy.final) {
+          if(this.state.accuracy.initial == -1 || this.state.accuracy.final == -1){
+            return(<div className="alert alert-info">
+                    <strong>INFO</strong> This image can not be evaluated because is not annotated as a main query.
+                  </div>);
+          }else if(this.state.accuracy.initial > this.state.accuracy.final) {
             return(<div className="alert alert-danger">
                     <strong>Oh oh...</strong> Accuracy decreased from {this.state.accuracy.initial} to {this.state.accuracy.final}.
                   </div>);
@@ -372,33 +391,40 @@ class ImageWithRelateds extends Component {
     renderSentence(array){
       return (
         this.state.activeMode == 'q' ? <div>
-        <div style={{
-          padding: "2px",
-          color: "#666"
-        }}> Feel free to experiment through multi queries search selecting different images :
-        {this.getSelectedImages().toString()}
+          <div className="alert alert-info"><strong>MODE INFO:</strong> Feel free to
+          experiment through multi queries by selecting different images in order to
+          improve the ranking of the query:
+          {this.getSelectedImages().toString()}
       </div>
+      <div style={{
+          display: "block",
+          minHeight: "1px",
+          width: "100%",
+          border: "1px solid #ddd",
+          overflow: "auto"}}> </div>
         <Gallery
           images={array}
-          // onSelectImage = {this.onSelectImage.bind(this,array)}
           showLightboxThumbnails = {true}
           enableLightbox	= {false}
           onClickThumbnail = {this.onSelectImage.bind(this,array)}
           rowHeight = {260}
           margin = {10}
-          // tagStyle = {}
         />
       </div> :
       <div className = "annotations">
-        <div className="alert alert-danger">
+        {/* <div className="alert alert-danger">
           <strong>Danger!</strong> All the annotations will be saved to improve the system.
            To just experiment, use the query expansion mode.
-        </div>
-        <div style={{
-            padding: "2px",
-            color: "#666"
-          }}> Please, select an image and annotate if it is similar to the query or not.
-           When you finish, press SUBMIT : </div>
+        </div> */}
+        <div className="alert alert-info"><strong> MODE INFO: </strong>You can select an image
+          and annotate whether it is similar to the query or not. When you finish,
+          please press SUBMIT: </div>
+           <div style={{
+               display: "block",
+               minHeight: "1px",
+               width: "100%",
+               border: "1px solid #ddd",
+               overflow: "auto"}}> </div>
           <Gallery
             images={array}
             onClickThumbnail = {this.onSelectThumbnail.bind(this,array)}
@@ -453,12 +479,6 @@ class ImageWithRelateds extends Component {
                   (this.props.relatedImages && this.props.relatedImages.list &&
                     this.props.relatedImages.list.length ? this.display_Gallery_Images(this.state.activeMode,null) : []));
 
-       // let array = (this.state.activeMode == 'e') ?
-       //        (this.state.images && this.state.images.length ? this.state.images :
-       //              this.display_ReactRpg_Images())
-       //        : (this.state.images && this.state.images.length ? this.state.images :
-       //             this.display_Gallery_Images());
-
        const n_pages =  Math.ceil(this.state.relatedImages && this.state.relatedImages.list
            ? this.state.relatedImages.list.length/ ItemsPerPage : 0 );
 
@@ -508,8 +528,10 @@ class ImageWithRelateds extends Component {
                   <div className="button-section">
                       { !(this.state.activeMode == 'e') ?
                           <button className="button submit" type="button" onClick={this.submitAnnotations.bind((this))}>
-                            Submit annotations</button> : null
+                            Submit annotations</button> : <button className="button submit" type="button"
+                              style={{visibility:"hidden"}}></button>
                       }
+                      {this.renderSystemAccuracy(0.3)}
                   </div>
               </div>
               {this.state.messageError ?
@@ -536,10 +558,8 @@ class ImageWithRelateds extends Component {
                       </div> :
                       <div>
                           {this.loading(false)}
-                          <div style={{
-                              padding: "2px",
-                              color: "#666"
-                            }}> Feel free of exploring the dataset for ever: </div>
+                          <div className="alert alert-info"><strong> MODE INFO: </strong>
+                          Feel free of exploring the dataset for ever... to infinity and beyond! </div>
                           <div style={{
                               display: "block",
                               minHeight: "1px",
@@ -589,12 +609,14 @@ class ImageWithRelateds extends Component {
 }
 
 function mapStateToProps(state) {
+  console.log(state.reducerRelatedImages.getRankin.ap_system);
   return { relatedImages: { list: state.reducerRelatedImages.getRankin.img_list, dataset: state.reducerRelatedImages.getRankin.dataset} ,
            accuracy: state.reducerRelatedImages.getRankin.accuracy ,
            encoded_image: state.reducerRelatedImages.img_info ,
            messageError: state.reducerRelatedImages.messageError,
            annotations_sent: state.reducerRelatedImages.getRankin.confirm,
-           imlist: state.reducerImages.imlist
+           imlist: state.reducerImages.imlist,
+           ap_system: state.reducerRelatedImages.getRankin.ap_system
          };
 }
 

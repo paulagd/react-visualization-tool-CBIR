@@ -87,13 +87,16 @@ To install them, find your operating system to download in [here](https://nodejs
       > npm -v
 
 
-> In case of `error` with the `node-gyp` in rebuild, execute the next commands:
+> In case of `error` with the `node-gyp` in rebuild...
 >
-> sudo add-apt-repository ppa:chris-lea/zeromq
-> sudo add-apt-repository ppa:chris-lea/libpgm
-> sudo apt-get update
-> sudo apt-get install libzmq3-dev
-
+> For Ubuntu / Linux,  execute the next commands:
+>
+>   sudo add-apt-repository ppa:chris-lea/zeromq
+>   sudo add-apt-repository ppa:chris-lea/libpgm
+>   sudo apt-get update
+>   sudo apt-get install libzmq3-dev
+>
+> You should be using Python 2.7. No other versions as Python 3.X allowed.
 
 ---
 
