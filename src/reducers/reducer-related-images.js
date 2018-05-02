@@ -1,6 +1,6 @@
 import * as TYPES from '../actions/types';
 
-const INITIAL_STATE = { getRankin: {img_list:null, dataset:null, ap_system:null}, img_info:null ,messageError: null};
+const INITIAL_STATE = { getRankin: {img_list:null, dataset:null, ap_system:null}, confirm:null, img_info:null ,messageError: null};
 
 export default function(state = INITIAL_STATE, action) {
   switch (action.type) {
@@ -19,26 +19,7 @@ export default function(state = INITIAL_STATE, action) {
         img_info: action.payload.encoded_image
       });
 
-    case TYPES.UPDATED_RANKING_FEEDBACK:
-
-    console.log("UPDATED_RANKING_FEEDBACK");
-      // let accuracy = {initial: action.payload.request.data.initial,
-      //                 final:action.payload.request.data.final,
-      //                 }
-      //
-      // return Object.assign({}, state, {
-      //   getRankin: {
-      //     img_list: action.payload.request.data.json,
-      //     accuracy,
-      //     ap_system: action.payload.request.data.mAP,
-      //     dataset:action.payload.dataset,
-      //     confirm : action.payload.request.data.success,
-      //   }
-      // });
-
     case TYPES.SEND_ANNOTATIONS:
-    console.log("SEND_ANNOTATIONS");
-
         let accuracy = {
           initial: action.payload.request.data.initial,
           final:action.payload.request.data.final,

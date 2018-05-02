@@ -282,6 +282,10 @@ class ImageWithRelateds extends Component {
 
       let images = res.filter(function(n){ return n != undefined });
 
+      images = images.filter((val, id, array) => {
+         return array.indexOf(val) == id;
+      });
+
       for(var i=0; i<images.length; i++){
         if(!(images[i].isPositive)){
           //if the images are negative ( or nothing --> mode = q)
@@ -339,18 +343,16 @@ class ImageWithRelateds extends Component {
       let new_mAP = this.state.ap_system ? this.state.ap_system : '-';
       if(new_mAP < 0.5){
         return(<div className="alert alert-danger system-ap">
-                <strong>System AP : </strong> {new_mAP}
+                <strong>mean AP : </strong> {new_mAP}
               </div>);
       } else {
         return(<div className="alert alert-success system-ap">
-                <strong>system AP : </strong> {new_mAP}
+                <strong>mean AP : </strong> {new_mAP}
               </div>);
       }
     }
 
     renderAccuracy(){
-      console.log('acccc',this.state.accuracy);
-      console.log('confirm',this.props.annotations_sent);
       if(this.state.accuracy){
         if(this.props.annotations_sent ==  true){
             if(this.state.accuracy.initial && this.state.accuracy.final){
@@ -388,7 +390,7 @@ class ImageWithRelateds extends Component {
     renderSentence(array){
       return (
         this.state.activeMode == 'q' ? <div>
-          <div className="alert alert-info"><strong>MODE INFO:</strong> Feel free to
+          <div className="alert alert-info"><strong>INFO OF THE MODE:</strong> Feel free to
           experiment through multi queries by selecting different images in order to
           improve the ranking of the query:
           {this.getSelectedImages().toString()}
@@ -413,7 +415,7 @@ class ImageWithRelateds extends Component {
           <strong>Danger!</strong> All the annotations will be saved to improve the system.
            To just experiment, use the query expansion mode.
         </div> */}
-        <div className="alert alert-info"><strong> MODE INFO: </strong>You can select an image
+        <div className="alert alert-info"><strong> INFO OF THE MODE: </strong>You can select an image
           and annotate whether it is similar to the query or not. When you finish,
           please press SUBMIT: </div>
            <div style={{
@@ -435,8 +437,7 @@ class ImageWithRelateds extends Component {
     }
 
     submitAnnotations(){
-      // TODO: revisar
-      // QUITAR EL PATH
+      // TODO: QUITAR EL path
       let similar_list = this.getSelectedImages();
       let dataset = this.state.relatedImages.dataset;
       let path =  null;
@@ -447,12 +448,17 @@ class ImageWithRelateds extends Component {
 
       console.log("similar_list",similar_list);
       if(similar_list.positive || similar_list.negative ) {
-        // MODE FEEDBACK
-        this.state.url ? this.props.send_Annotations(null, this.state.url , this.props.encoded_image , dataset, path, similar_list, this.state.activeMode)
-             : this.props.send_Annotations(this.state.id, null , null, dataset, path, similar_list, this.state.activeMode);
 
-        //TODO: esperar propietat de confirma de sent annotations i reload
-        this.props.resetRanking();
+        if(similar_list.negative.length == 0){
+          alert("If you don't want to do any negative annotation, please select query expansion mode.")
+        } else {
+          // MODE FEEDBACK
+          this.state.url ? this.props.send_Annotations(null, this.state.url , this.props.encoded_image , dataset, path, similar_list, this.state.activeMode)
+               : this.props.send_Annotations(this.state.id, null , null, dataset, path, similar_list, this.state.activeMode);
+
+          //TODO: esperar propietat de confirma de sent annotations i reload
+          this.props.resetRanking();
+        }
       } else {
         //MODE QE : COMENTO LO DE LA URL I FROM FILE
         this.props.sendFeedback_QE(this.state.id, null , null, dataset, path, similar_list, this.state.activeMode);
@@ -467,7 +473,7 @@ class ImageWithRelateds extends Component {
        dataset = dataset ? dataset : this.props.location.query.dataset;
        if(dataset){
 
-        // IDEA: SOMETIMES DOES NOT WORK --> FIXED THEORETICALLY
+        // BUG:FIXED THEORETICALLY
        let array = (this.state.activeMode == 'e') ?
             (this.state.images && this.state.images.length ? this.state.images :
                   (this.props.relatedImages && this.props.relatedImages.list &&
@@ -554,7 +560,7 @@ class ImageWithRelateds extends Component {
                       </div> :
                       <div>
                           {this.loading(false)}
-                          <div className="alert alert-info"><strong> MODE INFO: </strong>
+                          <div className="alert alert-info"><strong> INFO OF THE MODE: </strong>
                           Feel free of exploring the dataset for ever... to infinity and beyond! </div>
                           <div style={{
                               display: "block",
@@ -578,7 +584,7 @@ class ImageWithRelateds extends Component {
          </div>
         );
       } else {
-        console.log("NO DATASET");
+        alert("NO DATASET");
       }
     }
 
