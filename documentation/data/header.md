@@ -16,16 +16,11 @@ This can be done by modifying the following code:
     },{
       name: 'INSTRE',
       link: '/images/instre',
-    },{
-      name: 'GROUPS',
-      link: '/images/groups',
     }];
 ```
 > options_NavBar is an array of objects where each object will correspond to one desired dataset.
 This attribute will be imported in `src/routes.js` and in `src/components/Home.js` in order to customize
 the entire application with the desired datasets.
-
----
 
 #### **To modify the options_NavBar...**
 

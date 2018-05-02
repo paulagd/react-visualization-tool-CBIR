@@ -24,11 +24,6 @@ It has three different modes implemented:
         the accuracy of the system and of each singular image improves or not
         depending on which images are selected to compute the `multi query`.
 
-> Repositories related:
->
-> * [Nodejs server](https://github.com/paulagd/node-server)
-> * [Python CBIR random example](https://bitbucket.org/emohe/python-server-dummy)
-
 ---
 ## Requirements
 
@@ -68,6 +63,13 @@ To install them, find your operating system to download in [here](https://nodejs
 
      > npm -v
 
+  8. Install zmq
+    > brew install zmq
+    >
+    > export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig to ~/.profile
+    >
+    > run sudo npm install zmq -g --unsafe-perm=true --allow-root
+
 * MacOS
 
    1. Download the .tar.gz file from the previous link.
@@ -87,6 +89,14 @@ To install them, find your operating system to download in [here](https://nodejs
       > npm -v
 
 
+    6. Install zmq
+      > brew install zmq
+      >
+      > export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig to ~/.profile
+      >
+      > run sudo npm install zmq -g --unsafe-perm=true --allow-root
+
+
 > In case of `error` with the `node-gyp` in rebuild...
 >
 > For Ubuntu / Linux,  execute the next commands:
@@ -98,6 +108,12 @@ To install them, find your operating system to download in [here](https://nodejs
 >
 > You should be using Python 2.7. No other versions as Python 3.X allowed.
 
+---
+### Repositories related:
+>
+> * [Nodejs server](https://github.com/paulagd/node-server)
+> * [python-server-salbow](https://bitbucket.org/emohe/python-server-salbow/src/master/)
+> * [python-server-dummy](https://bitbucket.org/emohe/python-server-dummy/src/master/)
 ---
 
 ## Getting started

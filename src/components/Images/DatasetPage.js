@@ -85,15 +85,9 @@ class DatasetPage extends Component {
 
       this.state.qimList.map((obj, j)=> {
       let id = obj.image;
+      id =  id.split(".")[0];
 
-      //IDEA: If it's instre we can't send the path. We need to change the id
-      if(obj.image.indexOf("/") != -1){
-        id = getIdFromPath(obj.image, this.state.imlist);
-      } else {
-        id =  id.split(".")[0];
-      }
-
-      array.push({
+      id ? array.push({
           url: this.state.url_imgs + id +`?dataset=${this.state.title}`,
           clickHandler: (path) => {
               this.props.resetRanking();
@@ -103,7 +97,7 @@ class DatasetPage extends Component {
                 query: { dataset: this.state.title}
               });
             },
-          });
+          }) : null;
       });
     }
     array = this.splitArray(array, ItemsPerPage);
@@ -119,15 +113,6 @@ class DatasetPage extends Component {
 
     return (
       <div className = "dataset-content" >
-        {/* <Gallery
-          images={array[this.state.activePage - 1]}
-          // onSelectImage = {this.onSelectImage.bind(this,array)}
-          showLightboxThumbnails = {false}
-          enableLightbox	= {false}
-          // onClickThumbnail = {this.onSelectImage.bind(this,array)}
-          rowHeight = {260}
-          margin = {10}
-        /> */}
         <ReactRpg imagesArray={array ? array[this.state.activePage - 1] : []} columns={[2, 4]} padding={10} />
         <Pagination
          activePage={this.state.activePage}
