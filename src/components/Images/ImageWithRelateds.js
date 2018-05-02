@@ -349,44 +349,41 @@ class ImageWithRelateds extends Component {
     }
 
     renderAccuracy(){
+      console.log('acccc',this.state.accuracy);
+      console.log('confirm',this.props.annotations_sent);
       if(this.state.accuracy){
-        if(this.state.accuracy.initial && this.state.accuracy.final){
-          if(this.state.accuracy.initial == -1 || this.state.accuracy.final == -1){
-            return(<div className="alert alert-info">
-                    <strong>INFO</strong> This image can not be evaluated because is not annotated as a main query.
-                  </div>);
-          }else if(this.state.accuracy.initial > this.state.accuracy.final) {
-            return(<div className="alert alert-danger">
-                    <strong>Oh oh...</strong> Accuracy decreased from {this.state.accuracy.initial} to {this.state.accuracy.final}.
-                  </div>);
-          } else if (this.state.accuracy.initial < this.state.accuracy.final){
-            return(<div className="alert alert-success">
-                    <strong>Oh yes!</strong> Accuracy increased from {this.state.accuracy.initial} to {this.state.accuracy.final}.
-                  </div>);
-          } else if(this.state.accuracy.initial && (this.state.accuracy.initial == this.state.accuracy.final)){
-            return(<div className="alert alert-info">
-                    <strong>INFO</strong> Accuracy stayed the same: {this.state.accuracy.final}.
-                  </div>);
-          }
+        if(this.props.annotations_sent ==  true){
+            if(this.state.accuracy.initial && this.state.accuracy.final){
+              if(this.state.accuracy.initial == -1 || this.state.accuracy.final == -1){
+                return(<div className="alert alert-info">
+                        <strong>INFO</strong> This image can not be evaluated because is not annotated as a main query.
+                      </div>);
+              }else if(this.state.accuracy.initial > this.state.accuracy.final) {
+                return(<div className="alert alert-danger">
+                        <strong>Oh no...</strong> The average precision of this query decreased from {this.state.accuracy.initial} to {this.state.accuracy.final}.
+                      </div>);
+              } else if (this.state.accuracy.initial < this.state.accuracy.final){
+                return(<div className="alert alert-success">
+                        <strong>Oh yes!</strong> The average precision of this query increased from {this.state.accuracy.initial} to {this.state.accuracy.final}.
+                      </div>);
+              } else if(this.state.accuracy.initial && (this.state.accuracy.initial == this.state.accuracy.final)){
+                return(<div className="alert alert-info">
+                        <strong>INFO</strong> Accuracy stayed the same: {this.state.accuracy.final}
+                      </div>);
+              }
+            } else {
+              return(<div className="alert alert-danger">
+                      <strong>OPS!</strong> Accuracy recived is not in the complete format.
+                    </div>);
+            }
         } else {
           return(<div className="alert alert-danger">
-                  <strong>OPS!</strong> Accuracy recived is not in the complete format.
+                  <strong>Oh oh...</strong> Something went wrong. Be sure that the "evaluate" module is enabled in your CBIR.
                 </div>);
         }
       }
     }
 
-    renderAnnotationsSent(){
-      if (this.props.annotations_sent ==  true){
-        return(<div className="alert alert-success">
-                <strong>Thank you!</strong> Your annotations have been submited to improve the system.
-              </div>);
-      } else if (this.props.annotations_sent == false) {
-        return(<div className="alert alert-danger">
-                <strong>Oh oh...</strong> Something went wrong. Sorry, try again.
-              </div>);
-      }
-    }
 
     renderSentence(array){
       return (
@@ -511,7 +508,6 @@ class ImageWithRelateds extends Component {
                   showThumbnails={false}/>
                   <div className="text-portrait-slide">
                       {this.renderAccuracy()}
-                      {this.renderAnnotationsSent()}
                       <label className="first" >  Choose the mode you want to be in: </label>
                       <label className="radio" >
                         <input type="radio" name="optradio"  checked = {this.state.activeMode === 'e'}
@@ -531,7 +527,7 @@ class ImageWithRelateds extends Component {
                             Submit annotations</button> : <button className="button submit" type="button"
                               style={{visibility:"hidden"}}></button>
                       }
-                      {this.renderSystemAccuracy(0.3)}
+                      {this.renderSystemAccuracy()}
                   </div>
               </div>
               {this.state.messageError ?
@@ -609,7 +605,6 @@ class ImageWithRelateds extends Component {
 }
 
 function mapStateToProps(state) {
-  console.log(state.reducerRelatedImages.getRankin.ap_system);
   return { relatedImages: { list: state.reducerRelatedImages.getRankin.img_list, dataset: state.reducerRelatedImages.getRankin.dataset} ,
            accuracy: state.reducerRelatedImages.getRankin.accuracy ,
            encoded_image: state.reducerRelatedImages.img_info ,

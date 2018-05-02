@@ -20,26 +20,38 @@ export default function(state = INITIAL_STATE, action) {
       });
 
     case TYPES.UPDATED_RANKING_FEEDBACK:
-      let accuracy = {initial: action.payload.request.data.initial,
-                      final:action.payload.request.data.final,
-                      }
 
-      return Object.assign({}, state, {
-        getRankin: {
-          img_list: action.payload.request.data.json,
-          accuracy,
-          ap_system: action.payload.request.data.mAP,
-          dataset:action.payload.dataset
-        }
-      });
+    console.log("UPDATED_RANKING_FEEDBACK");
+      // let accuracy = {initial: action.payload.request.data.initial,
+      //                 final:action.payload.request.data.final,
+      //                 }
+      //
+      // return Object.assign({}, state, {
+      //   getRankin: {
+      //     img_list: action.payload.request.data.json,
+      //     accuracy,
+      //     ap_system: action.payload.request.data.mAP,
+      //     dataset:action.payload.dataset,
+      //     confirm : action.payload.request.data.success,
+      //   }
+      // });
 
     case TYPES.SEND_ANNOTATIONS:
-      return Object.assign({}, state, {
-        getRankin: {
-          img_list: action.payload.request.data.json,
-          dataset:action.payload.dataset,
-          confirm : action.payload.request.data.success
+    console.log("SEND_ANNOTATIONS");
+
+        let accuracy = {
+          initial: action.payload.request.data.initial,
+          final:action.payload.request.data.final,
         }
+
+        return Object.assign({}, state, {
+          getRankin: {
+            img_list: action.payload.request.data.json,
+            accuracy,
+            ap_system: action.payload.request.data.mAP,
+            dataset:action.payload.dataset,
+            confirm : action.payload.request.data.success,
+          }
       });
 
     case TYPES.RESET_ANNOTATIONS:

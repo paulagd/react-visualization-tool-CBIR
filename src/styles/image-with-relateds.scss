@@ -79,11 +79,19 @@
             border:0px;
             padding: 0px;
 
-            .system-ap{
+            .system-ap {
               display:inline-block;
-              // margin-bottom: 200%;
-              vertical-align: top !important;
+              background-color: rgba(128, 128, 128, 0.34);
               margin-top: 6%;
+              margin-left: 5px;
+            }
+
+            .alert-success {
+              color: #1ab31d;
+            }
+
+            .alert-danger {
+              color: #de2a27;
             }
 
             .button {

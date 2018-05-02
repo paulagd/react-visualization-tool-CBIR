@@ -256,7 +256,7 @@ export function sendFeedback_QE(id, url, encoded_image, dataset, path, similar_l
         axios.post(query, { dataset,url,encoded_image, path, similar_list, mode})
         .then(request => {
             dispatch({
-                type: TYPES.UPDATED_RANKING_FEEDBACK,
+                type: TYPES.SEND_ANNOTATIONS,
                 payload: {request, dataset}
             });
         }).catch((error) => {
