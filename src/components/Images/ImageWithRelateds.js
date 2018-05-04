@@ -343,11 +343,11 @@ class ImageWithRelateds extends Component {
       let new_mAP = this.state.ap_system ? this.state.ap_system : '-';
       if(new_mAP < 0.5){
         return(<div className="alert alert-danger system-ap">
-                <strong>mean AP : </strong> {new_mAP}
+                <strong>System mean AP : </strong> {new_mAP}
               </div>);
       } else {
         return(<div className="alert alert-success system-ap">
-                <strong>mean AP : </strong> {new_mAP}
+                <strong>System mean AP : </strong> {new_mAP}
               </div>);
       }
     }
