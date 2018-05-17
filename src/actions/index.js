@@ -2,7 +2,7 @@ import axios from 'axios';
 import * as TYPES from './types';
 import { getPathfromId } from '../../utils/index';
 
-const ROOT_URL = 'http://localhost:5000';
+const ROOT_URL = 'http://0.0.0.0:5000';
 
 
 /**

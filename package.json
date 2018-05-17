@@ -6,7 +6,7 @@
   "scripts": {
     "compile": "webpack",
     "build": "webpack -p",
-    "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --progress --inline --hot",
+    "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --host 0.0.0.0 --port 3000 --progress --inline --hot",
     "doc": "apidoc -o documentation -e node_modules"
   },
   "author": "Paula Gomez Duran",

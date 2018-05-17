@@ -8,7 +8,7 @@ It has three different modes implemented:
 
     1. Explorer mode
 
-        The user can explore the dataset through `clickable` images which become new
+        The user can explore the dataset through  `clickable` images which become new
         queries in order to display its ranking.
 
     2. Annotation mode
@@ -39,12 +39,12 @@ To install them, find your operating system to download in [here](https://nodejs
 
   2. Unpack the provided archive to /opt/nodejs:
       > mkdir -p /opt/nodejs
-      > tar #name_of_the_downloaded_file -C /opt/nodejs
+      > tar -xvzf #name_of_the_downloaded_file -C /opt/nodejs
+      > cd /opt/nodejs
       > mv #name_of_the_UNCOMPRESSED_downloaded_file 6.11.3
 
   3. Create link to current node version
 
-      > cd /opt/nodejs
       > ln -s 6.11.3 current
 
   4. Create link to current node binary
