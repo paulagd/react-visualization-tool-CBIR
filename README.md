@@ -24,6 +24,7 @@ It has three different modes implemented:
 >* Zmq
 
 <br />
+
 **Setup in Linux (tested in Ubuntu 16.04)**
 
   * Create a virtualenv using python2.7
